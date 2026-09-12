@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import Lenis from "lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { setLenis } from "@/lib/lenis";
 
 /**
  * One Lenis instance for the whole page.
@@ -23,6 +24,15 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
 
     const lenis = new Lenis({ lerp: 0.075 });
 
+    // Lenis owns the scroll position, so anything that wants to move the page
+    // — section snapping included — has to go through this instance rather
+    // than window.scrollTo, which Lenis would pull straight back.
+    setLenis(lenis);
+
+    if (process.env.NODE_ENV === "development") {
+      (window as unknown as { __lenis?: Lenis }).__lenis = lenis;
+    }
+
     const onScroll = () => ScrollTrigger.update();
     lenis.on("scroll", onScroll);
 
@@ -34,6 +44,7 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
       lenis.off("scroll", onScroll);
       gsap.ticker.remove(raf); // the reference snippet leaked this one
       gsap.ticker.lagSmoothing(500, 33);
+      setLenis(null);
       lenis.destroy();
     };
   }, []);
