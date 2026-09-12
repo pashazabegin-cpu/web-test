@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Design tokens — sampled directly from the Figma file, not eyeballed.
+   Greens come from the CTA pill, which is a vertical gradient, not a flat fill.
+--------------------------------------------------------------------------- */
+@theme {
+  --color-ink: #000000;
+  --color-paper: #ffffff;
+
+  /* brand green — CTA pill */
+  --color-green-400: #2f9445; /* top highlight */
+  --color-green-500: #1c8b34; /* base */
+  --color-green-600: #017d1c; /* bottom shade */
+  --color-ring-inner: #033f0f;
+  --color-ring-outer: #061406;
+  --color-shine: #b8f5c8; /* mint — must read *over* the green, not match it */
+
+  /* accent */
+  --color-gold: #f7b605;
+
+  /* step cards */
+  --color-step-1: #a261b8;
+  --color-step-2: #efb242;
+  --color-step-3: #281719;
+
+  /* feature list states */
+  --color-label-idle: #333333;
+
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+
+  --radius-curtain: 40px;
+}
+
+@layer base {
+  html {
+    background: var(--color-ink);
+    /* Lenis drives scrolling; native smooth scroll would fight it */
+    scroll-behavior: auto;
+  }
+
+  body {
+    background: var(--color-ink);
+    color: var(--color-paper);
+    font-family: var(--font-mono);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.01em;
+  }
+
+  /* Parallax layers translate on X. `clip` — never `hidden`: hidden creates a
+     scroll container and breaks the `sticky` the FAQ curtain depends on. */
+  section {
+    overflow-x: clip;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 4px;
+  }
+}
+
+/* Every scroll-driven effect on this site is gated behind this. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

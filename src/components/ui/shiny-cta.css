@@ -1,0 +1,222 @@
+/* ---------------------------------------------------------------------------
+   Tridal CTA.
+
+   Built on the reference "shiny button", but re-pointed at this design:
+
+   - The reference assumes a BLACK pill with a coloured sweep. Ours is a
+     saturated green pill, so a green sweep would be invisible against it.
+     The sweep therefore rides the outer ring (which sits on black) and the
+     shine colour is mint, not green.
+   - The Figma button is three concentric rounded rects (441/419/399 wide).
+     That halo is the brand shape, so it is kept and the sweep is applied to
+     it rather than replacing it.
+   - Rings use the mask-composite technique so their interior stays
+     transparent — the hero photo shows through, as in the design.
+   - Loaded once from this file, not re-emitted per instance.
+--------------------------------------------------------------------------- */
+
+@property --sweep {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.cta {
+  --pad-x: 21px;
+  --pad-y: 19px;
+  --ring-gap-x: 11px;
+  --ring-gap-y: 10px;
+  --pill-h: 87px;
+  --label: 1.5rem;
+  --sweep-speed: 6s;
+
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  padding: var(--pad-y) var(--pad-x);
+  border-radius: 999px;
+  isolation: isolate;
+  cursor: pointer;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.cta--sm {
+  --pad-x: 0px;
+  --pad-y: 0px;
+  --pill-h: 40px;
+  --label: 0.875rem;
+}
+
+/* Figma mobile: 335 outer / 303 pill / 70 tall. At the desktop size the halo
+   overflows a 375 viewport. */
+@media (max-width: 767px) {
+  .cta {
+    --pad-x: 16px;
+    --pad-y: 15px;
+    --ring-gap-x: 8px;
+    --ring-gap-y: 8px;
+    --pill-h: 70px;
+    --label: 1.125rem;
+  }
+  .cta__pill {
+    padding-inline: 1.75rem;
+  }
+  .cta--sm {
+    --pill-h: 40px;
+    --label: 0.8125rem;
+  }
+}
+
+/* ---- rings ---------------------------------------------------------------- */
+
+.cta__ring {
+  position: absolute;
+  border-radius: 999px;
+  pointer-events: none;
+  border: 1px solid var(--color-ring-outer);
+}
+
+.cta__ring--outer {
+  inset: 0;
+}
+
+.cta__ring--inner {
+  inset: var(--ring-gap-y) var(--ring-gap-x);
+  border-color: var(--color-ring-inner);
+}
+
+/* The travelling shine. A conic gradient masked down to the 1px ring, so the
+   middle stays see-through. */
+.cta__ring--outer::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--sweep),
+    transparent 0deg,
+    var(--color-green-400) 25deg,
+    var(--color-shine) 50deg,
+    var(--color-green-400) 75deg,
+    transparent 110deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 600ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Runs only while the button is actually on screen — see use-in-view.ts.
+   A permanent @property animation would repaint every frame for the whole
+   page lifetime and eat into the budget the scroll scrubs need. */
+.cta[data-animate="true"] .cta__ring--outer::after {
+  opacity: 1;
+  animation: cta-sweep var(--sweep-speed) linear infinite;
+}
+
+/* ---- pill ----------------------------------------------------------------- */
+
+.cta__pill {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: var(--pill-h);
+  padding-inline: 2.5rem;
+  border-radius: 999px;
+  overflow: hidden;
+  /* vertical gradient, sampled from Figma — a flat fill reads dead */
+  background: linear-gradient(
+    180deg,
+    var(--color-green-400) 0%,
+    var(--color-green-500) 45%,
+    var(--color-green-600) 82%,
+    var(--color-green-500) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.25),
+    inset 0 -1px 0 rgb(0 0 0 / 0.2);
+  transition: filter 400ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.cta--sm .cta__pill {
+  padding-inline: 1.25rem;
+}
+
+/* inner sheen sweeping across the green */
+.cta__pill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 35%,
+    rgb(255 255 255 / 0.28) 50%,
+    transparent 65%
+  );
+  translate: -100% 0;
+  pointer-events: none;
+}
+
+.cta[data-animate="true"] .cta__pill::after {
+  animation: cta-sheen var(--sweep-speed) cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.cta__label {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--label);
+  line-height: 1;
+  color: var(--color-paper);
+  white-space: nowrap;
+}
+
+/* ---- interaction ---------------------------------------------------------- */
+
+.cta:hover .cta__pill {
+  filter: brightness(1.12);
+}
+
+.cta:active {
+  translate: 0 1px;
+}
+
+.cta:hover .cta__ring--outer::after {
+  --sweep-speed: 2.5s;
+}
+
+@keyframes cta-sweep {
+  to {
+    --sweep: 360deg;
+  }
+}
+
+@keyframes cta-sheen {
+  0% {
+    translate: -100% 0;
+  }
+  55%,
+  100% {
+    translate: 100% 0;
+  }
+}
+
+/* Static, still on-brand: the pill keeps its gradient, nothing moves. */
+@media (prefers-reduced-motion: reduce) {
+  .cta[data-animate="true"] .cta__ring--outer::after,
+  .cta[data-animate="true"] .cta__pill::after {
+    animation: none;
+  }
+  .cta[data-animate="true"] .cta__ring--outer::after {
+    opacity: 0.5;
+  }
+}
