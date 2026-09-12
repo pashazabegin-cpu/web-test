@@ -4,12 +4,13 @@ import { ParallaxScene } from "@/components/ui/parallax-scene";
 
 export function Hero() {
   return (
-    /* The Figma hero is 1440x1241 — deliberately taller than a viewport, which
-       is also what gives the parallax somewhere to travel. Height is therefore
-       locked to the design ratio on desktop rather than squeezed into 100vh. */
-    <section className="relative min-h-svh overflow-hidden md:h-[86.2vw]">
+    /* Figma hero is 1440x1073 — taller than a typical viewport on purpose, so
+       the CTA rides just into the fold rather than sitting fully above it, and
+       the parallax has somewhere to travel. Height is locked to the design
+       ratio (1073/1440) instead of being squeezed into 100vh. */
+    <section className="relative min-h-svh overflow-hidden md:h-[74.5vw]">
       {/* Header lives only in the hero in the design, so it is not sticky. */}
-      <header className="absolute inset-x-0 top-0 z-50 flex items-center justify-between px-5 py-4">
+      <header className="absolute inset-x-0 top-0 z-50 flex items-center justify-between px-5 py-4 md:px-[1.4%] md:py-[3.2%]">
         <Image
           src="/img/logo.webp"
           alt="Tridal"
@@ -54,7 +55,7 @@ export function Hero() {
         {/* Outer div owns the layout transform (centring); the inner img owns
             the GSAP one. They cannot share an element — GSAP writes `transform`
             directly and would wipe out the Tailwind translate. */}
-        <div className="pointer-events-none absolute left-1/2 top-[8%] z-10 w-full min-w-[45rem] max-w-none -translate-x-1/2 select-none md:top-[6.2%]">
+        <div className="pointer-events-none absolute left-1/2 top-[8%] z-10 w-full min-w-[45rem] max-w-none -translate-x-1/2 select-none md:top-[-3.1%] md:w-[102.8%]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             data-depth="2"
@@ -79,7 +80,7 @@ export function Hero() {
         />
 
         {/* Text column sits above the photo, as in the design. */}
-        <div className="relative z-30 flex h-full min-h-svh flex-col justify-between px-5 pb-[7%] pt-24 md:pt-[10.8%]">
+        <div className="relative z-30 flex h-full min-h-svh flex-col justify-between px-5 pb-[7%] pt-24 md:pb-[11.4%] md:pt-[3.2%]">
           {/* 3 */}
           <h1
             data-depth="3"

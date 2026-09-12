@@ -35,16 +35,26 @@ const STEPS = [
 ] as const;
 
 /**
- * The three frames are cropped differently in Figma and the man is ~17%
- * larger in step3, so placing them at their mockup coordinates makes him jump.
- * These widths and offsets were derived by measuring his torso in each source
- * image and solving for a common centre and scale — he now stays put and only
- * the gesture changes.
+ * Placement of the three gesture frames.
+ *
+ * Derived by correlating the silhouette width-profile of each source image
+ * against step1, searching over scale and vertical offset. Result: all three
+ * are drawn at effectively the same scale (step3 differs by 1%); step3 simply
+ * sits ~108px lower in its own canvas because the party hat needs headroom.
+ *
+ * An earlier attempt measured torso width at the bottom row instead, which the
+ * confetti in step3 corrupted — that produced a bogus "17% larger" and shrank
+ * the third frame visibly. Widths below are within a whisker of the Figma
+ * values; only the horizontal centring needed correcting.
+ *
+ * Vertical alignment needs no offsets: anchoring all three to the bottom edge
+ * puts step1/step2 at y=98 and step3 at y=-9 on a 919px frame, which is what
+ * the correlation asks for.
  */
 const CHARACTERS = [
-  { src: "/img/step1.webp", left: "13.1%", width: "46.9%", alt: "Hand showing one finger" },
-  { src: "/img/step2.webp", left: "14.7%", width: "44.5%", alt: "Hand showing two fingers" },
-  { src: "/img/step3.webp", left: "17.9%", width: "44.8%", alt: "Hand showing three fingers" },
+  { src: "/img/step1.webp", left: "13.12%", width: "46.88%", alt: "Hand showing one finger" },
+  { src: "/img/step2.webp", left: "14.25%", width: "43.89%", alt: "Hand showing two fingers" },
+  { src: "/img/step3.webp", left: "13.80%", width: "52.81%", alt: "Hand showing three fingers" },
 ] as const;
 
 export function HowItWorks() {
@@ -113,6 +123,23 @@ export function HowItWorks() {
           }
 
           if (confetti) {
+            // Confetti is its own plane, not something pinned to the man: it
+            // drifts across the whole pinned timeline at its own rate, so by
+            // the time it is revealed it is already in motion rather than
+            // popping in dead still. Runs behind the visibility cut on
+            // purpose — the drift is continuous, only the reveal is a cut.
+            tl.fromTo(
+              confetti,
+              { yPercent: -7, xPercent: 2, scale: 1.12 },
+              {
+                yPercent: 6,
+                xPercent: -2,
+                scale: 1,
+                ease: "none",
+                duration: 2,
+              },
+              0,
+            );
             tl.set(confetti, { autoAlpha: 1 }, 1.5);
           }
 
@@ -171,6 +198,14 @@ export function HowItWorks() {
             }}
           />
         ))}
+
+        {/* The character dissolves into the floor rather than being cut off at
+            the frame edge. Measured off the mockup: luminance falls from ~140
+            at 72% of the height to ~8 at the bottom. */}
+        <div
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-[15] h-[32%] bg-gradient-to-t from-ink from-35% via-ink/80 to-transparent"
+          aria-hidden
+        />
 
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img

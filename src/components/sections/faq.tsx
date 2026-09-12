@@ -78,6 +78,12 @@ export function FaqCurtain({ under }: { under: React.ReactNode }) {
         {under}
       </div>
 
+      {/* Holds the covered section on screen for one viewport before the
+          curtain starts. Without it the FAQ begins riding up the instant Trust
+          reaches the top, so Trust never gets a plain scroll-through of its
+          own and the curtain reads as starting in the previous section. */}
+      <div className="h-svh" aria-hidden />
+
       <section
         data-curtain
         className="relative z-10 min-h-svh rounded-t-curtain border-t border-gold/20 bg-ink"

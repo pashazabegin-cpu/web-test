@@ -35,6 +35,14 @@ const FEATURES = [
 /** Vertical rhythm of the label list, as a share of the pinned viewport. */
 const STEP = 0.13;
 
+/**
+ * Label opacity by distance from the active item, straight out of Figma
+ * (1 / 0.2 / 0.1 / 0.05). It is a falloff, not an on/off state — the list
+ * reads as receding into the dark rather than as one lit row.
+ */
+const DIM = [1, 0.2, 0.1, 0.05] as const;
+const dim = (distance: number) => DIM[Math.min(distance, DIM.length - 1)];
+
 export function WhyUs() {
   const root = useRef<HTMLElement>(null);
 
@@ -86,8 +94,9 @@ export function WhyUs() {
               at,
             );
 
-            tl.to(labels[i - 1], { color: "#333333", duration: 1 }, at);
-            tl.to(labels[i], { color: "#ffffff", duration: 1 }, at);
+            labels.forEach((label, j) => {
+              tl.to(label, { opacity: dim(Math.abs(j - i)), duration: 1 }, at);
+            });
 
             tl.to(
               objects[i - 1],
@@ -131,7 +140,7 @@ export function WhyUs() {
       <div className="relative hidden h-svh md:block">
         <h2
           id="why-us-title"
-          className="absolute inset-x-0 top-[9.4%] text-center text-[clamp(1rem,1.4vw,1.25rem)] text-gold"
+          className="absolute inset-x-0 top-[9.4%] text-center text-[clamp(1rem,1.74vw,1.5625rem)] leading-[1.198] font-semibold text-gold"
         >
           Why as?
         </h2>
@@ -165,8 +174,8 @@ export function WhyUs() {
               <li
                 key={f.label}
                 data-label
-                className="flex h-[13vh] items-center font-display text-[clamp(1.75rem,3.7vw,3.3rem)] leading-none font-extrabold"
-                style={{ color: i === 0 ? "#ffffff" : "#333333" }}
+                className="flex h-[13vh] items-center font-display text-[clamp(1.75rem,3.82vw,3.44rem)] leading-[1.198] font-extrabold"
+                style={{ opacity: dim(i) }}
               >
                 {f.label}
               </li>
@@ -175,12 +184,12 @@ export function WhyUs() {
         </div>
 
         {/* supporting copy */}
-        <div className="absolute right-[6%] top-[43.7%] z-10 w-[24%]">
+        <div className="absolute right-[6%] top-[40.9%] z-10 flex h-[13vh] w-[24%] items-center">
           {FEATURES.map((f, i) => (
             <p
               key={f.label}
               data-copy
-              className="col-start-1 row-start-1 text-[clamp(0.9rem,1.45vw,1.3rem)] leading-relaxed [grid-area:1/1]"
+              className="absolute text-[clamp(0.9rem,1.95vw,1.75rem)] leading-[1.4]"
               style={i === 0 ? undefined : { opacity: 0, visibility: "hidden" }}
             >
               {f.copy}
