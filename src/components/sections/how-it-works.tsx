@@ -15,21 +15,21 @@ const STEPS = [
     n: "Step №1",
     copy: "Sign up in 2 minutes",
     bg: "var(--color-step-1)",
-    box: { left: "51.3%", top: "33.7%", width: "33%", height: "20.6svh" },
-    rotate: -3.61,
+    box: { left: "51.6%", top: "33.7%", width: "32.43%", height: "17.4svh" },
+    rotate: -3.56,
   },
   {
     n: "Step №2",
     copy: "Fund your account",
     bg: "var(--color-step-2)",
-    box: { left: "52.6%", top: "41.9%", width: "33%", height: "23.4svh" },
+    box: { left: "52.9%", top: "41.9%", width: "32.43%", height: "20.9svh" },
     rotate: 2.89,
   },
   {
     n: "Step №3",
     copy: "Trade with real-time AI guidance",
     bg: "var(--color-step-3)",
-    box: { left: "52%", top: "54%", width: "33.2%", height: "27.9svh" },
+    box: { left: "52.4%", top: "54%", width: "32.43%", height: "25.6svh" },
     rotate: -2.64,
   },
 ] as const;
@@ -130,10 +130,10 @@ export function HowItWorks() {
             // purpose — the drift is continuous, only the reveal is a cut.
             tl.fromTo(
               confetti,
-              { yPercent: -7, xPercent: 2, scale: 1.12 },
+              { yPercent: -6, xPercent: 7, scale: 1.1 },
               {
-                yPercent: 6,
-                xPercent: -2,
+                yPercent: 5,
+                xPercent: -7,
                 scale: 1,
                 ease: "none",
                 duration: 2,
@@ -143,9 +143,33 @@ export function HowItWorks() {
             tl.set(confetti, { autoAlpha: 1 }, 1.5);
           }
 
+          // Pointer response lives on the wrapper, the scroll drift on the
+          // image inside it — GSAP owns `transform` outright on whatever it
+          // animates, so the two cannot share an element.
+          let stopPointer: (() => void) | undefined;
+          const wrap = el.querySelector<HTMLElement>("[data-confetti-wrap]");
+
+          // Skip on touch: there is no hover there, and the listener would
+          // only fire on taps.
+          if (wrap && window.matchMedia("(pointer: fine)").matches) {
+            const toX = gsap.quickTo(wrap, "x", { duration: 1.1, ease: "power3" });
+            const toY = gsap.quickTo(wrap, "y", { duration: 1.1, ease: "power3" });
+
+            const onMove = (e: PointerEvent) => {
+              toX((e.clientX / window.innerWidth - 0.5) * 56);
+              toY((e.clientY / window.innerHeight - 0.5) * 30);
+            };
+
+            window.addEventListener("pointermove", onMove, { passive: true });
+            stopPointer = () =>
+              window.removeEventListener("pointermove", onMove);
+          }
+
           if (tl.scrollTrigger) {
             detachSnap = attachSnap(tl.scrollTrigger, STEPS.length - 1);
           }
+
+          return () => stopPointer?.();
         },
       );
     }, root);
@@ -199,25 +223,31 @@ export function HowItWorks() {
           />
         ))}
 
-        {/* The character dissolves into the floor rather than being cut off at
-            the frame edge. Measured off the mockup: luminance falls from ~140
-            at 72% of the height to ~8 at the bottom. */}
+        {/* Figma's "Background shape": a plain linear ramp, clear until 67.5%
+            of the frame and only fully black as it passes the bottom edge.
+            Deliberately no solid band and no extra midpoint stop — those are
+            what made the earlier version far too heavy. */}
         <div
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-[15] h-[32%] bg-gradient-to-t from-ink from-35% via-ink/80 to-transparent"
+          className="pointer-events-none absolute inset-x-0 top-[67.5%] z-[15] h-[33.3%] bg-gradient-to-b from-transparent to-ink"
           aria-hidden
         />
 
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          data-confetti
-          src="/img/confeti-1.webp"
-          alt=""
+        <div
+          data-confetti-wrap
+          className="pointer-events-none absolute inset-0 z-20"
           aria-hidden
-          loading="lazy"
-          decoding="async"
-          className="pointer-events-none absolute inset-0 z-20 size-full object-cover"
-          style={{ opacity: 0, visibility: "hidden" }}
-        />
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            data-confetti
+            src="/img/confeti-1.webp"
+            alt=""
+            loading="lazy"
+            decoding="async"
+            className="size-full scale-110 object-cover"
+            style={{ opacity: 0, visibility: "hidden" }}
+          />
+        </div>
 
         {/* Wrapper carries position + tilt; the inner card is what GSAP moves.
             They cannot share an element — GSAP overwrites `transform`. */}
@@ -234,7 +264,7 @@ export function HowItWorks() {
           >
             <article
               data-card
-              className="grid content-center rounded-[1.4rem] px-[7%]"
+              className="grid content-center rounded-[20px] px-[7%]"
               style={{
                 minHeight: s.box.height,
                 background: s.bg,
