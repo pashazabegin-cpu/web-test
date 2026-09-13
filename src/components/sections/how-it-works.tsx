@@ -232,9 +232,13 @@ export function HowItWorks() {
           aria-hidden
         />
 
+        {/* Sits BELOW the scrim (z-15), not above it. Above it, the confetti
+            was the one layer the bottom gradient never reached, so it ended in
+            a hard horizontal cut at the section edge while the character faded
+            out properly. Underneath, it dissolves on the same ramp he does. */}
         <div
           data-confetti-wrap
-          className="pointer-events-none absolute inset-0 z-20"
+          className="pointer-events-none absolute inset-0 z-[12]"
           aria-hidden
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
