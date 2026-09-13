@@ -14,33 +14,33 @@
  * scroll-driven offset keeps accumulating while the block looks stationary and
  * what the reader studies is a drifted composition.
  *
- * Images use object-cover — that is what Figma's FILL scale mode means. Plain
- * `fill` (the CSS default) stretches artwork to the box, which is what made
- * the cast look elongated.
+ * The cast carries no object-fit at all: each cut-out is drawn at its natural
+ * aspect (width only, height auto), so there is no mechanism by which it can
+ * stretch. See the note on CAST for why fitting them to their Figma boxes was
+ * wrong in the first place.
  */
 
-/** Boxes straight from node 1:56, as shares of its 1440x919 frame. */
+/**
+ * Cast placement.
+ *
+ * The Figma boxes (503x1137 etc.) are NOT the artwork — they carry a lot of
+ * transparent padding, and the exported PNGs are trimmed to content. Scaling a
+ * trimmed cut-out to fill its declared box, which is what object-cover does,
+ * blew every figure up by roughly a third. That was the "too big".
+ *
+ * So each one is drawn at its natural size and placed by its centre, found by
+ * template-matching the cut-out against the mockup render of the frame. Sizes
+ * are widths only — height follows the image's own aspect, so nothing can
+ * stretch.
+ */
 const CAST = [
-  {
-    src: "/img/person-left.webp",
-    outer: { left: "-4.792%", top: "7.073%", width: "34.931%", height: "123.721%" },
-    inner: null,
-  },
-  {
-    src: "/img/left-image.webp",
-    outer: { left: "-11.25%", top: "51.501%", width: "35.958%", height: "80.251%" },
-    inner: { width: "89.87%", height: "95.45%", rotate: -4.38 },
-  },
-  {
-    src: "/img/person-right.webp",
-    outer: { left: "75.178%", top: "8.595%", width: "32.142%", height: "120.711%" },
-    inner: { width: "69.77%", height: "96.99%", rotate: 7.62 },
-  },
-  {
-    src: "/img/person-center.webp",
-    outer: { left: "66.289%", top: "46.856%", width: "44.281%", height: "82.976%" },
-    inner: { width: "67.43%", height: "85.31%", rotate: 21.39 },
-  },
+  // centre x/y and width, as shares of the 1440x919 frame
+  // nw/nh are the files' own pixel sizes: without them the browser cannot
+  // reserve an aspect before the lazy image loads and `h-auto` collapses to 0.
+  { src: "/img/person-left.webp", cx: "15.069%", cy: "52.992%", w: "30.139%", rotate: 0, nw: 434, nh: 854 },
+  { src: "/img/left-image.webp", cx: "12.361%", cy: "75.191%", w: "24.722%", rotate: -4.38, nw: 356, nh: 446 },
+  { src: "/img/person-right.webp", cx: "88.264%", cy: "53.537%", w: "24.861%", rotate: 7.62, nw: 358, nh: 840 },
+  { src: "/img/person-center.webp", cx: "83.542%", cy: "73.612%", w: "33.750%", rotate: 21.39, nw: 486, nh: 489 },
 ] as const;
 
 export function Trust() {
@@ -69,41 +69,24 @@ export function Trust() {
         </div>
 
         {CAST.map((p) => (
-          <div
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img
             key={p.src}
-            className="pointer-events-none absolute z-10 hidden md:grid md:place-items-center"
-            style={p.outer}
-          >
-            {p.inner ? (
-              <div
-                style={{
-                  width: p.inner.width,
-                  height: p.inner.height,
-                  transform: `rotate(${p.inner.rotate}deg)`,
-                }}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={p.src}
-                  alt=""
-                  aria-hidden
-                  loading="lazy"
-                  decoding="async"
-                  className="size-full object-cover object-bottom"
-                />
-              </div>
-            ) : (
-              /* eslint-disable-next-line @next/next/no-img-element */
-              <img
-                src={p.src}
-                alt=""
-                aria-hidden
-                loading="lazy"
-                decoding="async"
-                className="size-full object-cover object-bottom"
-              />
-            )}
-          </div>
+            src={p.src}
+            alt=""
+            aria-hidden
+            width={p.nw}
+            height={p.nh}
+            loading="lazy"
+            decoding="async"
+            className="pointer-events-none absolute z-10 hidden h-auto md:block"
+            style={{
+              left: p.cx,
+              top: p.cy,
+              width: p.w,
+              transform: `translate(-50%, -50%) rotate(${p.rotate}deg)`,
+            }}
+          />
         ))}
 
         {/* Type is sized as a share of the stage width too (22px / 1440 =
