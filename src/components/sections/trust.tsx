@@ -1,13 +1,13 @@
 /**
- * Trust is a fixed 1440x919 composition, so it is built as a fixed-aspect
- * stage rather than as percentages of the viewport.
+ * Trust is a fixed 1440x919 composition, so the SECTION itself carries that
+ * aspect ratio and every number inside is a share of the Figma frame.
  *
- * That distinction is why this block kept missing the mockup. Mapping x onto
- * viewport width and y onto viewport height distorts the composition on any
- * screen whose aspect is not 1440/919 — figures stretch, and anything anchored
- * to the bottom edge drifts off it. Inside the stage below, every number is a
- * share of the Figma frame itself and lands where the design puts it, on any
- * screen.
+ * Nothing is cropped. An earlier version scaled a stage to cover a 100vh
+ * section, which quietly cut the composition on any screen whose aspect is not
+ * 1440/919 — on a 2000x1136 window that is 140px off the top and bottom, which
+ * is what pushed the coin field out of view and clipped the cast at the edges.
+ * Letting the section take the design's own height costs a little scroll on
+ * wide monitors and buys exactness everywhere.
  *
  * No parallax on this block. It cannot be reconciled with matching the mockup
  * one-to-one here: the section is held on screen by the FAQ curtain, so a
@@ -45,16 +45,13 @@ const CAST = [
 
 export function Trust() {
   return (
+    /* @container makes the cqw units below resolve against this frame rather
+       than the window, so type scales with the artwork. */
     <section
-      className="relative overflow-hidden bg-ink py-24 md:h-svh md:py-0"
+      className="@container relative w-full overflow-hidden bg-ink py-24 md:aspect-[1440/919] md:py-0"
       aria-labelledby="trust-title"
     >
-      {/* The stage always keeps the frame's aspect and is scaled to cover the
-          section: max() holds it at least as wide as the section and at least
-          as tall, so it neither letterboxes nor distorts. */}
-      {/* @container makes the cqw units below resolve against the stage, not
-          the viewport — that is what keeps type in proportion with the art. */}
-      <div className="@container relative md:absolute md:top-1/2 md:left-1/2 md:aspect-[1440/919] md:w-[max(100%,calc(100svh*1440/919))] md:-translate-x-1/2 md:-translate-y-1/2">
+      <div className="contents">
         {/* coins — 1320x566 centred, hanging 176px below the frame */}
         <div className="pointer-events-none absolute bottom-[-19.15%] left-1/2 z-0 hidden h-[61.59%] w-[91.67%] -translate-x-1/2 md:block">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -127,10 +124,11 @@ export function Trust() {
             Segregated client accounts
           </p>
 
-          {/* TODO: 123/45 is placeholder text in the mockup — awaiting the real
-              regulator and licence number before this can ship. */}
+          {/* Reproduces the mockup verbatim. 123/45 is placeholder text there —
+              flagged with the client, to be swapped for the real licence number
+              before launch. */}
           <p className="text-base md:absolute md:inset-x-0 md:top-[71.926%] md:text-[1.528cqw]">
-            Regulated by CySEC
+            Regulated by CySEC · License 123/45
           </p>
         </div>
       </div>
