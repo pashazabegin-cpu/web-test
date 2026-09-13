@@ -1,13 +1,14 @@
 /**
- * Trust is a fixed 1440x919 composition, so the SECTION itself carries that
- * aspect ratio and every number inside is a share of the Figma frame.
+ * Trust is a fixed 1440x919 composition, drawn into a stage that keeps that
+ * aspect and is scaled to COVER a one-viewport section. Every number inside is
+ * a share of the Figma frame, so the composition itself is always exact.
  *
- * Nothing is cropped. An earlier version scaled a stage to cover a 100vh
- * section, which quietly cut the composition on any screen whose aspect is not
- * 1440/919 — on a 2000x1136 window that is 140px off the top and bottom, which
- * is what pushed the coin field out of view and clipped the cast at the edges.
- * Letting the section take the design's own height costs a little scroll on
- * wide monitors and buys exactness everywhere.
+ * The trade-off is deliberate and was chosen by the client: the block stays
+ * exactly one screen tall, and on a window whose aspect is not 1440/919 the
+ * overflow is cropped evenly top and bottom (140px each on a 2000x1136
+ * screen). The alternatives were letting the block run taller than the
+ * viewport, or letterboxing it — both were rejected in favour of the
+ * one-screen rhythm.
  *
  * No parallax on this block. It cannot be reconciled with matching the mockup
  * one-to-one here: the section is held on screen by the FAQ curtain, so a
@@ -45,13 +46,15 @@ const CAST = [
 
 export function Trust() {
   return (
-    /* @container makes the cqw units below resolve against this frame rather
-       than the window, so type scales with the artwork. */
     <section
-      className="@container relative w-full overflow-hidden bg-ink py-24 md:aspect-[1440/919] md:py-0"
+      className="relative overflow-hidden bg-ink py-24 md:h-svh md:py-0"
       aria-labelledby="trust-title"
     >
-      <div className="contents">
+      {/* max() holds the stage at least as wide and at least as tall as the
+          section, so it covers without ever distorting.
+          @container makes the cqw units below resolve against the stage rather
+          than the window, so type scales with the artwork. */}
+      <div className="@container relative md:absolute md:top-1/2 md:left-1/2 md:aspect-[1440/919] md:w-[max(100%,calc(100svh*1440/919))] md:-translate-x-1/2 md:-translate-y-1/2">
         {/* coins — 1320x566 centred, hanging 176px below the frame */}
         <div className="pointer-events-none absolute bottom-[-19.15%] left-1/2 z-0 hidden h-[61.59%] w-[91.67%] -translate-x-1/2 md:block">
           {/* eslint-disable-next-line @next/next/no-img-element */}
