@@ -9,6 +9,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { BlurTextEffect } from "@/components/ui/blur-text-effect";
 
 const QA = [
   { q: "How much to start?", a: "From $10." },
@@ -92,9 +93,9 @@ export function FaqCurtain({ under }: { under: React.ReactNode }) {
         <div className="mx-auto grid max-w-[80rem] gap-10 px-5 py-24 md:grid-cols-[1fr_2.4fr] md:gap-16 md:py-[14vh]">
           <h2
             id="faq-title"
-            className="text-[clamp(1rem,1.4vw,1.25rem)] text-gold"
+            className="text-[2.1875rem] leading-[1.198] font-semibold text-gold optical-ui md:text-[2.8125rem]"
           >
-            Faq
+            <BlurTextEffect>Faq</BlurTextEffect>
           </h2>
 
           <Accordion
@@ -104,7 +105,9 @@ export function FaqCurtain({ under }: { under: React.ReactNode }) {
           >
             {QA.map((item) => (
               <AccordionItem key={item.q} value={item.q}>
-                <AccordionTrigger>{item.q}</AccordionTrigger>
+                <AccordionTrigger>
+                  <BlurTextEffect>{item.q}</BlurTextEffect>
+                </AccordionTrigger>
                 <AccordionContent>{item.a}</AccordionContent>
               </AccordionItem>
             ))}

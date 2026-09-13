@@ -60,6 +60,18 @@
   }
 }
 
+/* Figma sets the 45px h2, the 28px button label and the step numbers to the
+   14pt optical size rather than the display one. */
+@utility optical-ui {
+  font-variation-settings: "opsz" 14, "wdth" 100;
+}
+
+/* Display optical size for large Bricolage text that is not a heading
+   element, and so does not inherit the rule in @layer base. */
+@utility optical-display {
+  font-variation-settings: "opsz" 96, "wdth" 100;
+}
+
 @layer base {
   html {
     background: var(--color-ink);
@@ -82,7 +94,14 @@
     font-family: var(--font-display);
     font-weight: 800;
     line-height: 1;
-    letter-spacing: -0.01em;
+    /* Figma reports letterSpacing 0 on every display style; the -0.01em that
+       used to be here was mine, not the design's. */
+    letter-spacing: normal;
+    /* Bricolage is variable on opsz/wdth/wght, and the design pins the big
+       display styles to the 96pt optical size. Left to `font-optical-sizing:
+       auto` the browser picks opsz from the font size (~52pt at 69px), whose
+       letterforms are wider — every headline came out about 8% too long. */
+    font-variation-settings: "opsz" 96, "wdth" 100;
   }
 
   /* Parallax layers translate on X. `clip` — never `hidden`: hidden creates a

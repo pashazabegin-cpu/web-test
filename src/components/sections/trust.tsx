@@ -21,6 +21,8 @@
  * wrong in the first place.
  */
 
+import { BlurTextEffect } from "@/components/ui/blur-text-effect";
+
 /**
  * Cast placement.
  *
@@ -29,19 +31,27 @@
  * trimmed cut-out to fill its declared box, which is what object-cover does,
  * blew every figure up by roughly a third. That was the "too big".
  *
- * So each one is drawn at its natural size and placed by its centre, found by
- * template-matching the cut-out against the mockup render of the frame. Sizes
- * are widths only — height follows the image's own aspect, so nothing can
- * stretch.
+ * So each one is drawn at its natural size and placed by its centre. Sizes are
+ * widths only — height follows the image's own aspect, so nothing can stretch.
+ *
+ * The client later re-exported these with the edges painted in so they no
+ * longer read as hard-cut. That re-canvased every file (person-left gained
+ * 213px on the left, left-image 108px, person-right 178px on the right,
+ * person-center lost 115px of empty padding on the left and gained 102px on
+ * the right) WITHOUT moving the artwork. The centres and widths below were
+ * recomputed from those offsets — found by phase-correlating each new file
+ * against its predecessor, residual <1.5/255 — so every figure still lands on
+ * the exact pixel it did before. Do not "round" these: they encode a
+ * measurement, not a taste.
  */
 const CAST = [
   // centre x/y and width, as shares of the 1440x919 frame
   // nw/nh are the files' own pixel sizes: without them the browser cannot
   // reserve an aspect before the lazy image loads and `h-auto` collapses to 0.
-  { src: "/img/person-left.webp", cx: "15.069%", cy: "52.992%", w: "30.139%", rotate: 0, nw: 434, nh: 854 },
-  { src: "/img/left-image.webp", cx: "12.361%", cy: "75.191%", w: "24.722%", rotate: -4.38, nw: 356, nh: 446 },
-  { src: "/img/person-right.webp", cx: "88.264%", cy: "53.537%", w: "24.861%", rotate: 7.62, nw: 358, nh: 840 },
-  { src: "/img/person-center.webp", cx: "83.542%", cy: "73.612%", w: "33.750%", rotate: 21.39, nw: 486, nh: 489 },
+  { src: "/img/person-left.webp", cx: "7.673%", cy: "52.992%", w: "44.931%", rotate: 0, nw: 647, nh: 854 },
+  { src: "/img/left-image.webp", cx: "8.622%", cy: "75.640%", w: "32.222%", rotate: -4.38, nw: 464, nh: 446 },
+  { src: "/img/person-right.webp", cx: "94.390%", cy: "54.821%", w: "37.222%", rotate: 7.62, nw: 536, nh: 840 },
+  { src: "/img/person-center.webp", cx: "90.558%", cy: "77.918%", w: "32.847%", rotate: 21.39, nw: 473, nh: 489 },
 ] as const;
 
 export function Trust() {
@@ -55,18 +65,23 @@ export function Trust() {
           @container makes the cqw units below resolve against the stage rather
           than the window, so type scales with the artwork. */}
       <div className="@container relative md:absolute md:top-1/2 md:left-1/2 md:aspect-[1440/919] md:w-[max(100%,calc(100svh*1440/919))] md:-translate-x-1/2 md:-translate-y-1/2">
-        {/* coins — 1320x566 centred, hanging 176px below the frame */}
-        <div className="pointer-events-none absolute bottom-[-19.15%] left-1/2 z-0 hidden h-[61.59%] w-[91.67%] -translate-x-1/2 md:block">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/img/coin-background.webp"
-            alt=""
-            aria-hidden
-            loading="lazy"
-            decoding="async"
-            className="size-full object-cover"
-          />
-        </div>
+        {/* Coins. The re-export is the previous 1320x566 fill with a 100px
+            margin painted round every side — verified 1:1 against the old
+            render — so it is placed at its own natural size (1520x766 frame px
+            starting 40px left of and 429px down the frame) with NO object-fit.
+            Cropping it is the one thing that must not happen here: the painted
+            margin is what stops the field ending in a hard edge. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/img/coin-background.webp"
+          alt=""
+          aria-hidden
+          width={1520}
+          height={766}
+          loading="lazy"
+          decoding="async"
+          className="pointer-events-none absolute top-[46.681%] left-[-2.778%] z-0 hidden h-auto w-[105.556%] max-w-none md:block"
+        />
 
         {CAST.map((p) => (
           /* eslint-disable-next-line @next/next/no-img-element */
@@ -95,12 +110,12 @@ export function Trust() {
         <div className="relative z-20 flex flex-col items-center gap-6 px-5 text-center md:block md:h-full md:px-0">
           <h2
             id="trust-title"
-            className="text-base font-semibold text-gold md:absolute md:inset-x-0 md:top-[13.275%] md:text-[1.736cqw] md:leading-[1.198]"
+            className="text-[2.1875rem] leading-[1.198] font-semibold text-gold optical-ui md:absolute md:inset-x-0 md:top-[13.275%] md:text-[3.125cqw]"
           >
-            Why traders choose us
+            <BlurTextEffect>Why traders choose us</BlurTextEffect>
           </h2>
 
-          <p className="font-display text-5xl leading-[1.198] font-extrabold md:absolute md:inset-x-0 md:top-[25.353%] md:text-[5.208cqw]">
+          <p className="font-display text-5xl leading-[1.198] font-extrabold optical-display md:absolute md:inset-x-0 md:top-[25.353%] md:text-[5.208cqw]">
             500,000+
           </p>
 

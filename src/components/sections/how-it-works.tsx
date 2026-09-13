@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { attachSnap } from "@/lib/lenis";
+import { BlurTextEffect } from "@/components/ui/blur-text-effect";
 
 /**
  * Boxes are % of the 1440x919 Figma frame. Rotations were measured off the
@@ -74,7 +75,7 @@ export function HowItWorks() {
         "(min-width: 768px) and (prefers-reduced-motion: no-preference)",
         () => {
           const cards = gsap.utils.toArray<HTMLElement>("[data-card]", el);
-          const chars = gsap.utils.toArray<HTMLElement>("[data-char]", el);
+          const chars = gsap.utils.toArray<HTMLElement>("img[data-char]", el);
           const giant = el.querySelector<HTMLElement>("[data-giant]");
           const confetti = el.querySelector<HTMLElement>("[data-confetti]");
 
@@ -200,9 +201,9 @@ export function HowItWorks() {
 
         <h2
           id="how-title"
-          className="absolute inset-x-0 top-[9.4%] z-30 text-center text-[clamp(1rem,1.4vw,1.25rem)] text-gold"
+          className="absolute inset-x-0 top-[9.4%] z-30 text-center text-[2.8125rem] leading-[1.198] font-semibold text-gold optical-ui"
         >
-          How it works
+          <BlurTextEffect>How it works</BlurTextEffect>
         </h2>
 
         {CHARACTERS.map((c, i) => (
@@ -277,8 +278,8 @@ export function HowItWorks() {
               }}
             >
               <div className="flex items-baseline gap-[9%]">
-                <h3 className="shrink-0 font-display text-[clamp(1.05rem,2.1vw,1.9rem)] leading-none font-extrabold">
-                  {s.n}
+                <h3 className="shrink-0 font-display text-[clamp(1.05rem,2.1vw,1.9rem)] leading-none font-extrabold optical-ui">
+                  <BlurTextEffect>{s.n}</BlurTextEffect>
                 </h3>
                 <p className="text-[clamp(0.85rem,1.9vw,1.7rem)] leading-snug">
                   {s.copy}
@@ -291,7 +292,9 @@ export function HowItWorks() {
 
       {/* ---- mobile: the three cards simply stack, as drawn ---- */}
       <div className="md:hidden">
-        <h2 className="py-10 text-center text-base text-gold">How it works</h2>
+        <h2 className="py-10 text-center text-[2.1875rem] leading-[1.198] font-semibold text-gold optical-ui">
+          How it works
+        </h2>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/img/step3.webp"
@@ -308,7 +311,7 @@ export function HowItWorks() {
               style={{ background: s.bg, color: "#ffffff", transform: `rotate(${s.rotate}deg)` }}
             >
               <div className="flex items-baseline gap-4">
-                <h3 className="shrink-0 font-display text-base leading-none font-extrabold">
+                <h3 className="shrink-0 font-display text-base leading-none font-extrabold optical-ui">
                   {s.n}
                 </h3>
                 <p className="text-sm leading-relaxed">{s.copy}</p>

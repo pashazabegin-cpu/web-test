@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { ShinyButton } from "@/components/ui/shiny-button";
 import { ParallaxScene } from "@/components/ui/parallax-scene";
+import { BlurTextEffect } from "@/components/ui/blur-text-effect";
 
 export function Hero() {
   return (
@@ -86,11 +87,11 @@ export function Hero() {
             data-depth="3"
             className="text-center text-[clamp(2rem,5.6vw,4.35rem)]"
           >
-            Rade smarter
+            <BlurTextEffect>Rade smarter</BlurTextEffect>
             <br />
-            With{" "}
+            <BlurTextEffect delay={0.18}>With</BlurTextEffect>{" "}
             <span className="relative inline-block text-gold">
-              AI
+              <BlurTextEffect delay={0.24}>AI</BlurTextEffect>
               {/* Figma: 23px star against a 69.5px cap — 0.33em. Sized in em so
                   it tracks the clamped headline instead of needing breakpoints.
                   eslint-disable-next-line @next/next/no-img-element */}
@@ -102,7 +103,9 @@ export function Hero() {
                 className="absolute -right-[0.22em] top-0 w-[0.34em] md:w-[0.28em]"
               />
             </span>{" "}
-            that&apos;s on your side.
+            <BlurTextEffect delay={0.27}>
+              that&apos;s on your side.
+            </BlurTextEffect>
           </h1>
 
           {/* 4 — nearest the viewer */}

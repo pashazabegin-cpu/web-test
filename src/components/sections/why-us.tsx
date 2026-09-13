@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { attachSnap } from "@/lib/lenis";
+import { BlurTextEffect } from "@/components/ui/blur-text-effect";
 
 const FEATURES = [
   {
@@ -140,9 +141,9 @@ export function WhyUs() {
       <div className="relative hidden h-svh md:block">
         <h2
           id="why-us-title"
-          className="absolute inset-x-0 top-[9.4%] text-center text-[clamp(1rem,1.74vw,1.5625rem)] leading-[1.198] font-semibold text-gold"
+          className="absolute inset-x-0 top-[9.4%] text-center text-[2.8125rem] leading-[1.198] font-semibold text-gold optical-ui"
         >
-          Why as?
+          <BlurTextEffect>Why as?</BlurTextEffect>
         </h2>
 
         {/* artwork — one stacked sprite per feature */}
@@ -177,7 +178,7 @@ export function WhyUs() {
                 className="flex h-[13vh] items-center font-display text-[clamp(1.75rem,3.82vw,3.44rem)] leading-[1.198] font-extrabold"
                 style={{ opacity: dim(i) }}
               >
-                {f.label}
+                <BlurTextEffect>{f.label}</BlurTextEffect>
               </li>
             ))}
           </ul>
@@ -200,7 +201,9 @@ export function WhyUs() {
 
       {/* ---- mobile: four plain blocks, exactly as drawn ---- */}
       <div className="md:hidden">
-        <h2 className="py-10 text-center text-base text-gold">Why as?</h2>
+        <h2 className="py-10 text-center text-[2.1875rem] leading-[1.198] font-semibold text-gold optical-ui">
+          Why as?
+        </h2>
         <ul>
           {FEATURES.map((f) => (
             <li key={f.label} className="pb-14">
