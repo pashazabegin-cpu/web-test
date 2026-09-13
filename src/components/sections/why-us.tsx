@@ -99,22 +99,35 @@ export function WhyUs() {
               tl.to(label, { opacity: dim(Math.abs(j - i)), duration: 1 }, at);
             });
 
+            // Artwork swaps fast, and in the middle of the slide.
+            //
+            // These sprites are renders on their own dark ground, not
+            // cut-outs, so every frame where both are partly visible is a
+            // literal double exposure. The old tween ran for a full timeline
+            // unit — one whole viewport of scroll — and spent nearly all of
+            // it showing two objects at once, which is the dirt. Now the
+            // outgoing one is gone before the incoming one is legible: 0.12
+            // each, back to back, with 0.02 of overlap to keep it from
+            // reading as a hard cut.
+            //
+            // The scale is gone from the outgoing frame too — a sprite that
+            // shrinks while it dissolves smears rather than leaves.
             tl.to(
               objects[i - 1],
-              { autoAlpha: 0, scale: 0.94, duration: 1, ease: "power2.inOut" },
-              at,
+              { autoAlpha: 0, duration: 0.12, ease: "power1.in" },
+              at + 0.4,
             );
             tl.fromTo(
               objects[i],
-              { autoAlpha: 0, scale: 1.06 },
-              { autoAlpha: 1, scale: 1, duration: 1, ease: "power2.inOut" },
-              at,
+              { autoAlpha: 0, scale: 1.02 },
+              { autoAlpha: 1, scale: 1, duration: 0.12, ease: "power1.out" },
+              at + 0.5,
             );
 
-            // Copy swaps a touch quicker than the artwork so the two reads
-            // never overlap into mush.
-            tl.to(copies[i - 1], { autoAlpha: 0, duration: 0.45 }, at);
-            tl.to(copies[i], { autoAlpha: 1, duration: 0.45 }, at + 0.5);
+            // Copy brackets the swap — out just before, in just after — so
+            // the two reads never overlap.
+            tl.to(copies[i - 1], { autoAlpha: 0, duration: 0.15 }, at + 0.3);
+            tl.to(copies[i], { autoAlpha: 1, duration: 0.15 }, at + 0.55);
           }
 
           // Settle on whole states so the scroll never rests mid-crossfade.
@@ -141,7 +154,7 @@ export function WhyUs() {
       <div className="relative hidden h-svh md:block">
         <h2
           id="why-us-title"
-          className="absolute inset-x-0 top-[9.4%] text-center text-[2.8125rem] leading-[1.198] font-extrabold text-gold optical-ui"
+          className="absolute inset-x-0 top-[9.4%] z-20 text-center text-[2.8125rem] leading-[1.198] font-extrabold text-gold optical-ui"
         >
           <BlurTextEffect>Why as?</BlurTextEffect>
         </h2>
