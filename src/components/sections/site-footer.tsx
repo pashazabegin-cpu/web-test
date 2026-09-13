@@ -112,9 +112,14 @@ export function SiteFooter() {
             at 40%. Logo box: 126x64 at (1182,798); the artwork is centred in
             that box rather than filling it, which is how Figma crops it. */}
         <p className="absolute top-[87.378%] left-[9.167%] z-30 hidden w-[29.375%] text-[max(0.75rem,0.972cqw)] leading-normal text-white/40 md:block">
-          Trading with leverage carries a high level of risk and may not be
-          suitable for all investors. <br />
-          Asset values can go down as well as up.
+          <BlurTextEffect>
+            Trading with leverage carries a high level of risk and may not be
+            suitable for all investors.
+          </BlurTextEffect>{" "}
+          <br />
+          <BlurTextEffect delay={0.45}>
+            Asset values can go down as well as up.
+          </BlurTextEffect>
         </p>
 
         <Image
@@ -163,8 +168,11 @@ export function SiteFooter() {
           />
 
           <p className="absolute top-[74.643%] left-[10.933%] z-10 w-[78.133%] text-[max(0.8125rem,3.733cqw)] leading-normal text-white/40">
-            Trading with leverage carries a high level of risk and may not be
-            suitable for all investors. Asset values can go down as well as up.
+            <BlurTextEffect>
+              Trading with leverage carries a high level of risk and may not be
+              suitable for all investors. Asset values can go down as well as
+              up.
+            </BlurTextEffect>
           </p>
         </div>
 

@@ -114,8 +114,10 @@ export function Hero() {
             className="flex flex-col items-center gap-7 md:gap-9"
           >
             <p className="max-w-[42ch] text-center text-[clamp(0.9rem,1.45vw,1.3rem)] leading-relaxed">
-              Open positions on stocks, crypto and forex in seconds — with
-              insights that explain the market in plain language.
+              <BlurTextEffect>
+                Open positions on stocks, crypto and forex in seconds — with
+                insights that explain the market in plain language.
+              </BlurTextEffect>
             </p>
             <ShinyButton href="#signup">Start trading free</ShinyButton>
           </div>

@@ -108,7 +108,9 @@ export function FaqCurtain({ under }: { under: React.ReactNode }) {
                 <AccordionTrigger>
                   <BlurTextEffect>{item.q}</BlurTextEffect>
                 </AccordionTrigger>
-                <AccordionContent>{item.a}</AccordionContent>
+                <AccordionContent>
+                  <BlurTextEffect>{item.a}</BlurTextEffect>
+                </AccordionContent>
               </AccordionItem>
             ))}
           </Accordion>

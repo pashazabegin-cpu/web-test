@@ -116,11 +116,11 @@ export function Trust() {
           </h2>
 
           <p className="font-display text-5xl leading-[1.198] font-extrabold optical-display md:absolute md:inset-x-0 md:top-[25.353%] md:text-[5.208cqw]">
-            500,000+
+            <BlurTextEffect>500,000+</BlurTextEffect>
           </p>
 
           <p className="text-base md:absolute md:inset-x-0 md:top-[34.603%] md:text-[1.528cqw]">
-            traders worldwide
+            <BlurTextEffect delay={0.12}>traders worldwide</BlurTextEffect>
           </p>
 
           <div className="md:absolute md:top-[44.723%] md:left-[46.11%] md:h-[2.72%] md:w-[7.917%]">
@@ -135,18 +135,18 @@ export function Trust() {
           </div>
 
           <p className="text-base md:absolute md:inset-x-0 md:top-[48.966%] md:text-[1.528cqw]">
-            4.7 on App Store &amp; Google Play
+            <BlurTextEffect>4.7 on App Store &amp; Google Play</BlurTextEffect>
           </p>
 
           <p className="mx-auto max-w-[18ch] text-base md:absolute md:inset-x-0 md:top-[59.086%] md:text-[1.528cqw]">
-            Segregated client accounts
+            <BlurTextEffect>Segregated client accounts</BlurTextEffect>
           </p>
 
           {/* Reproduces the mockup verbatim. 123/45 is placeholder text there —
               flagged with the client, to be swapped for the real licence number
               before launch. */}
           <p className="text-base md:absolute md:inset-x-0 md:top-[71.926%] md:text-[1.528cqw]">
-            Regulated by CySEC · License 123/45
+            <BlurTextEffect>Regulated by CySEC · License 123/45</BlurTextEffect>
           </p>
         </div>
       </div>

@@ -3,6 +3,7 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 import { useInView } from "@/lib/use-in-view";
+import { BlurTextEffect } from "@/components/ui/blur-text-effect";
 import "./shiny-cta.css";
 
 const cta = cva("cta", {
@@ -41,7 +42,18 @@ export function ShinyButton({
         <span className="cta__ring cta__ring--inner" aria-hidden />
       )}
       <span className="cta__pill">
-        <span className="cta__label">{children}</span>
+        {/* Only a plain string can be split into characters; anything richer
+            is passed through untouched rather than silently losing the
+            effect on part of it. The split half is aria-hidden and the
+            component carries an sr-only copy, so the button keeps its
+            accessible name. */}
+        <span className="cta__label">
+          {typeof children === "string" ? (
+            <BlurTextEffect>{children}</BlurTextEffect>
+          ) : (
+            children
+          )}
+        </span>
       </span>
     </>
   );

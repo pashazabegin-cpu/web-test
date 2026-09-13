@@ -4,7 +4,10 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { attachSnap } from "@/lib/lenis";
-import { BlurTextEffect } from "@/components/ui/blur-text-effect";
+import {
+  BlurTextEffect,
+  replayBlurText,
+} from "@/components/ui/blur-text-effect";
 
 const FEATURES = [
   {
@@ -125,9 +128,20 @@ export function WhyUs() {
             );
 
             // Copy brackets the swap — out just before, in just after — so
-            // the two reads never overlap.
+            // the two reads never overlap. onStart, not a standalone call, so
+            // the letters only re-blur on the way in: all four copy blocks are
+            // in the viewport the whole time, so their own observers can never
+            // tell which one is the live state.
             tl.to(copies[i - 1], { autoAlpha: 0, duration: 0.15 }, at + 0.3);
-            tl.to(copies[i], { autoAlpha: 1, duration: 0.15 }, at + 0.55);
+            tl.to(
+              copies[i],
+              {
+                autoAlpha: 1,
+                duration: 0.15,
+                onStart: () => replayBlurText(copies[i]),
+              },
+              at + 0.55,
+            );
           }
 
           // Settle on whole states so the scroll never rests mid-crossfade.
@@ -206,7 +220,7 @@ export function WhyUs() {
               className="absolute text-[clamp(0.9rem,1.95vw,1.75rem)] leading-[1.4]"
               style={i === 0 ? undefined : { opacity: 0, visibility: "hidden" }}
             >
-              {f.copy}
+              <BlurTextEffect>{f.copy}</BlurTextEffect>
             </p>
           ))}
         </div>
@@ -215,12 +229,14 @@ export function WhyUs() {
       {/* ---- mobile: four plain blocks, exactly as drawn ---- */}
       <div className="md:hidden">
         <h2 className="py-10 text-center text-[2.1875rem] leading-[1.198] font-extrabold text-gold optical-ui">
-          Why as?
+          <BlurTextEffect>Why as?</BlurTextEffect>
         </h2>
         <ul>
           {FEATURES.map((f) => (
             <li key={f.label} className="pb-14">
-              <h3 className="text-center text-2xl">{f.label}</h3>
+              <h3 className="text-center text-2xl">
+                <BlurTextEffect>{f.label}</BlurTextEffect>
+              </h3>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={f.img}
@@ -230,7 +246,7 @@ export function WhyUs() {
                 className="mx-auto w-full max-w-[23rem]"
               />
               <p className="mx-auto max-w-[22rem] px-5 text-center leading-relaxed">
-                {f.copy}
+                <BlurTextEffect>{f.copy}</BlurTextEffect>
               </p>
             </li>
           ))}

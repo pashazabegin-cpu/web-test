@@ -4,7 +4,10 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { attachSnap } from "@/lib/lenis";
-import { BlurTextEffect } from "@/components/ui/blur-text-effect";
+import {
+  BlurTextEffect,
+  replayBlurText,
+} from "@/components/ui/blur-text-effect";
 
 /**
  * Boxes are % of the 1440x919 Figma frame. Rotations were measured off the
@@ -143,7 +146,15 @@ export function HowItWorks() {
             tl.fromTo(
               cards[i],
               { y: () => window.innerHeight - cards[i].offsetTop },
-              { y: 0, duration: 1, ease: "power2.out" },
+              {
+                y: 0,
+                duration: 1,
+                ease: "power2.out",
+                // The card is in the viewport from the moment the section is,
+                // just parked below the fold, so its own observer cannot tell
+                // when it arrives. Re-blur the text as it rises.
+                onStart: () => replayBlurText(cards[i]),
+              },
               at,
             );
 
@@ -314,7 +325,7 @@ export function HowItWorks() {
                   <BlurTextEffect>{s.n}</BlurTextEffect>
                 </h3>
                 <p className="text-[clamp(0.85rem,1.9vw,1.7rem)] leading-snug">
-                  {s.copy}
+                  <BlurTextEffect>{s.copy}</BlurTextEffect>
                 </p>
               </div>
             </article>
@@ -325,7 +336,7 @@ export function HowItWorks() {
       {/* ---- mobile: the three cards simply stack, as drawn ---- */}
       <div className="md:hidden">
         <h2 className="py-10 text-center text-[2.1875rem] leading-[1.198] font-extrabold text-gold optical-ui">
-          How it works
+          <BlurTextEffect>How it works</BlurTextEffect>
         </h2>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -346,7 +357,9 @@ export function HowItWorks() {
                 <h3 className="shrink-0 font-display text-base leading-none font-extrabold optical-ui">
                   {s.n}
                 </h3>
-                <p className="text-sm leading-relaxed">{s.copy}</p>
+                <p className="text-sm leading-relaxed">
+                  <BlurTextEffect>{s.copy}</BlurTextEffect>
+                </p>
               </div>
             </article>
           ))}
