@@ -1,11 +1,39 @@
 import { ParallaxScene } from "@/components/ui/parallax-scene";
 
-/** Cut-outs that flank the stats, pinned to the two edges as in the design. */
+/**
+ * Flanking cut-outs.
+ *
+ * Placement deliberately does NOT come from the Figma rectangles. Those carry
+ * a lot of transparent padding — the reporter's box starts at y=65 while his
+ * hair starts at y=331 — and the exported PNGs are trimmed to their content,
+ * so feeding the rect coordinates to a trimmed image drops everyone far too
+ * high and too far out.
+ *
+ * These values put the *visible* artwork where the mockup render has it.
+ * Measured off that render: the left group occupies 36%→bottom and reaches in
+ * to x=25%, the right group 32%→bottom reaching in to x=75%.
+ */
 const CAST = [
-  { src: "/img/person-left.webp", alt: "", side: "left", depth: 3, style: { left: "-4.8%", top: "7%", width: "35%" } },
-  { src: "/img/left-image.webp", alt: "", side: "left", depth: 4, style: { left: "-11.3%", top: "55%", width: "36%" } },
-  { src: "/img/person-right.webp", alt: "", side: "right", depth: 3, style: { right: "-17%", top: "8.6%", width: "32%" } },
-  { src: "/img/person-center.webp", alt: "", side: "right", depth: 4, style: { right: "-27%", top: "47%", width: "44%" } },
+  {
+    src: "/img/person-left.webp",
+    depth: 3,
+    style: { left: "-3%", top: "36%", width: "30%" },
+  },
+  {
+    src: "/img/left-image.webp",
+    depth: 4,
+    style: { left: "-6%", top: "62%", width: "28%" },
+  },
+  {
+    src: "/img/person-right.webp",
+    depth: 3,
+    style: { right: "-4%", top: "32%", width: "26%" },
+  },
+  {
+    src: "/img/person-center.webp",
+    depth: 4,
+    style: { right: "-8%", top: "60%", width: "34%" },
+  },
 ] as const;
 
 export function Trust() {
@@ -27,8 +55,6 @@ export function Trust() {
           className="pointer-events-none absolute inset-x-0 bottom-0 z-0 w-full"
         />
 
-        {/* the flanking cast — outer layers spread further under the shared
-            depth rule, which is what opens the frame as the section passes */}
         {CAST.map((p) => (
           <div
             key={p.src}
@@ -39,7 +65,8 @@ export function Trust() {
             <img
               data-depth={p.depth}
               src={p.src}
-              alt={p.alt}
+              alt=""
+              aria-hidden
               loading="lazy"
               decoding="async"
               className="block w-full"
@@ -47,42 +74,47 @@ export function Trust() {
           </div>
         ))}
 
-        <div className="relative z-20 flex h-full flex-col items-center justify-center px-5 text-center">
+        {/* Text sits on the mockup's own rows instead of being centred as one
+            block. Centring pushed the heading from 13% down to 21% and let the
+            spacing drift out of step with the artwork. */}
+        <div className="relative z-20 flex h-full flex-col items-center gap-6 px-5 py-24 text-center md:block md:py-0">
           <h2
             id="trust-title"
             data-depth="2"
-            className="text-[clamp(1rem,1.4vw,1.25rem)] text-gold"
+            className="text-[clamp(1rem,1.74vw,1.5625rem)] leading-[1.198] font-semibold text-gold md:absolute md:inset-x-0 md:top-[13.3%]"
           >
             Why traders choose us
           </h2>
 
           <p
             data-depth="2"
-            className="mt-[7%] font-display text-[clamp(2.5rem,5vw,4.5rem)] leading-none font-extrabold md:mt-[6vh]"
+            className="font-display text-[clamp(2.5rem,5vw,4.5rem)] leading-none font-extrabold md:absolute md:inset-x-0 md:top-[25.4%]"
           >
             500,000+
           </p>
-          <p className="mt-3 text-[clamp(0.9rem,1.45vw,1.3rem)]">
+
+          <p className="text-[clamp(0.9rem,1.6vw,1.44rem)] md:absolute md:inset-x-0 md:top-[34.6%]">
             traders worldwide
           </p>
 
           <div
             data-depth="2"
-            className="mt-[8%] flex flex-col items-center gap-3 md:mt-[7vh]"
+            className="md:absolute md:inset-x-0 md:top-[44.7%]"
           >
             <Stars />
-            <p className="text-[clamp(0.9rem,1.45vw,1.3rem)]">
-              4.7 on App Store &amp; Google Play
-            </p>
           </div>
 
-          <p className="mt-[8%] max-w-[18ch] text-[clamp(0.9rem,1.45vw,1.3rem)] leading-relaxed md:mt-[7vh]">
+          <p className="text-[clamp(0.9rem,1.6vw,1.44rem)] md:absolute md:inset-x-0 md:top-[49%]">
+            4.7 on App Store &amp; Google Play
+          </p>
+
+          <p className="mx-auto max-w-[18ch] text-[clamp(0.9rem,1.6vw,1.44rem)] leading-relaxed md:absolute md:inset-x-0 md:top-[59.1%]">
             Segregated client accounts
           </p>
 
           {/* TODO: awaiting the real regulator and licence number from the
               client — the Figma placeholder (123/45) must not ship. */}
-          <p className="mt-[7%] text-[clamp(0.9rem,1.45vw,1.3rem)] md:mt-[6vh]">
+          <p className="text-[clamp(0.9rem,1.6vw,1.44rem)] md:absolute md:inset-x-0 md:top-[71.9%]">
             Regulated by CySEC
           </p>
         </div>
@@ -93,7 +125,7 @@ export function Trust() {
 
 function Stars() {
   return (
-    <div className="flex gap-1" aria-label="Rated 4.7 out of 5">
+    <div className="flex justify-center gap-1" aria-label="Rated 4.7 out of 5">
       {[0, 1, 2, 3, 4].map((i) => (
         <svg
           key={i}
