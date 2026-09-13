@@ -141,7 +141,7 @@ export function WhyUs() {
       <div className="relative hidden h-svh md:block">
         <h2
           id="why-us-title"
-          className="absolute inset-x-0 top-[9.4%] text-center text-[2.8125rem] leading-[1.198] font-semibold text-gold optical-ui"
+          className="absolute inset-x-0 top-[9.4%] text-center text-[2.8125rem] leading-[1.198] font-extrabold text-gold optical-ui"
         >
           <BlurTextEffect>Why as?</BlurTextEffect>
         </h2>
@@ -201,7 +201,7 @@ export function WhyUs() {
 
       {/* ---- mobile: four plain blocks, exactly as drawn ---- */}
       <div className="md:hidden">
-        <h2 className="py-10 text-center text-[2.1875rem] leading-[1.198] font-semibold text-gold optical-ui">
+        <h2 className="py-10 text-center text-[2.1875rem] leading-[1.198] font-extrabold text-gold optical-ui">
           Why as?
         </h2>
         <ul>

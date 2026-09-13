@@ -93,7 +93,7 @@ export function FaqCurtain({ under }: { under: React.ReactNode }) {
         <div className="mx-auto grid max-w-[80rem] gap-10 px-5 py-24 md:grid-cols-[1fr_2.4fr] md:gap-16 md:py-[14vh]">
           <h2
             id="faq-title"
-            className="text-[2.1875rem] leading-[1.198] font-semibold text-gold optical-ui md:text-[2.8125rem]"
+            className="text-[2.1875rem] leading-[1.198] font-extrabold text-gold optical-ui md:text-[2.8125rem]"
           >
             <BlurTextEffect>Faq</BlurTextEffect>
           </h2>

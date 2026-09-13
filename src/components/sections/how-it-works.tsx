@@ -38,24 +38,54 @@ const STEPS = [
 /**
  * Placement of the three gesture frames.
  *
- * Derived by correlating the silhouette width-profile of each source image
- * against step1, searching over scale and vertical offset. Result: all three
- * are drawn at effectively the same scale (step3 differs by 1%); step3 simply
- * sits ~108px lower in its own canvas because the party hat needs headroom.
+ * Horizontal position comes from correlating the silhouette width-profile of
+ * each source against step1, searching over scale and vertical offset: all
+ * three are drawn at effectively the same scale (step3 differs by 1%), and
+ * step3 simply sits ~108px lower in its own canvas because the party hat
+ * needs headroom. An earlier attempt measured torso width at the bottom row,
+ * which the confetti in step3 corrupted — that produced a bogus "17% larger".
  *
- * An earlier attempt measured torso width at the bottom row instead, which the
- * confetti in step3 corrupted — that produced a bogus "17% larger" and shrank
- * the third frame visibly. Widths below are within a whisker of the Figma
- * values; only the horizontal centring needed correcting.
+ * SIZE is a height, not a width, and that is the whole point. These were
+ * sized as a share of the viewport WIDTH while the heading is placed at 9.4%
+ * of its HEIGHT, so the two drifted apart with the window's aspect: correct at
+ * the design's 1440x919 (1.567), but on any real laptop — 1512x860 is 1.758 —
+ * the figure grew tall enough to put his head straight through the title, and
+ * past 1.97 the head left the top of the frame entirely.
  *
- * Vertical alignment needs no offsets: anchoring all three to the bottom edge
- * puts step1/step2 at y=98 and step3 at y=-9 on a 919px frame, which is what
- * the correlation asks for.
+ * min() keeps the design exact at the design aspect and only ever shrinks:
+ * the first term is the figure's height as a share of the frame, the second
+ * is the height its Figma width would give. On a 1440x919 frame they are the
+ * same number, so nothing moves; on a shorter frame the first term wins and
+ * the head stays at 18% of the height, clear of the title's 15.3% baseline.
+ * On a narrow, tall window the second wins and he cannot overflow sideways.
  */
 const CHARACTERS = [
-  { src: "/img/step1.webp", left: "13.12%", width: "46.88%", alt: "Hand showing one finger" },
-  { src: "/img/step2.webp", left: "14.25%", width: "43.89%", alt: "Hand showing two fingers" },
-  { src: "/img/step3.webp", left: "13.80%", width: "52.81%", alt: "Hand showing three fingers" },
+  {
+    src: "/img/step1.webp",
+    left: "13.12%",
+    height: "min(89.35%, 57.02vw)",
+    nw: 675,
+    nh: 821,
+    alt: "Hand showing one finger",
+  },
+  {
+    src: "/img/step2.webp",
+    left: "14.25%",
+    height: "min(89.34%, 57.02vw)",
+    nw: 632,
+    nh: 821,
+    alt: "Hand showing two fingers",
+  },
+  {
+    // 100%, not 100.99%: Figma puts step3's box at y=0, and the export is
+    // clipped to the frame, so a full-height figure is exactly the design.
+    src: "/img/step3.webp",
+    left: "13.80%",
+    height: "min(100%, 64.45vw)",
+    nw: 753,
+    nh: 919,
+    alt: "Hand showing three fingers",
+  },
 ] as const;
 
 export function HowItWorks() {
@@ -201,7 +231,7 @@ export function HowItWorks() {
 
         <h2
           id="how-title"
-          className="absolute inset-x-0 top-[9.4%] z-30 text-center text-[2.8125rem] leading-[1.198] font-semibold text-gold optical-ui"
+          className="absolute inset-x-0 top-[9.4%] z-30 text-center text-[2.8125rem] leading-[1.198] font-extrabold text-gold optical-ui"
         >
           <BlurTextEffect>How it works</BlurTextEffect>
         </h2>
@@ -215,10 +245,12 @@ export function HowItWorks() {
             alt={c.alt}
             loading="lazy"
             decoding="async"
-            className="absolute bottom-0 z-10 h-auto object-contain"
+            width={c.nw}
+            height={c.nh}
+            className="absolute bottom-0 z-10 w-auto max-w-none"
             style={{
               left: c.left,
-              width: c.width,
+              height: c.height,
               ...(i === 0 ? {} : { opacity: 0, visibility: "hidden" }),
             }}
           />
@@ -292,7 +324,7 @@ export function HowItWorks() {
 
       {/* ---- mobile: the three cards simply stack, as drawn ---- */}
       <div className="md:hidden">
-        <h2 className="py-10 text-center text-[2.1875rem] leading-[1.198] font-semibold text-gold optical-ui">
+        <h2 className="py-10 text-center text-[2.1875rem] leading-[1.198] font-extrabold text-gold optical-ui">
           How it works
         </h2>
         {/* eslint-disable-next-line @next/next/no-img-element */}

@@ -110,7 +110,7 @@ export function Trust() {
         <div className="relative z-20 flex flex-col items-center gap-6 px-5 text-center md:block md:h-full md:px-0">
           <h2
             id="trust-title"
-            className="text-[2.1875rem] leading-[1.198] font-semibold text-gold optical-ui md:absolute md:inset-x-0 md:top-[13.275%] md:text-[3.125cqw]"
+            className="text-[2.1875rem] leading-[1.198] font-extrabold text-gold optical-ui md:absolute md:inset-x-0 md:top-[13.275%] md:text-[3.125cqw]"
           >
             <BlurTextEffect>Why traders choose us</BlurTextEffect>
           </h2>
