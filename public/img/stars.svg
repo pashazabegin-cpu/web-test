@@ -1,0 +1,24 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="114" height="25" viewBox="0 0 114 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Star rating">
+<path id="Star 2" d="M9.62593 4L12.5115 9.65428L18.7807 10.6514L14.2949 15.143L15.2839 21.4135L9.62593 18.5351L3.96795 21.4135L4.95698 15.143L0.471127 10.6514L6.74036 9.65428L9.62593 4Z" fill="#F7B605"/>
+<path id="Star 3" d="M33.0629 4L35.9485 9.65428L42.2177 10.6514L37.7319 15.143L38.7209 21.4135L33.0629 18.5351L27.405 21.4135L28.394 15.143L23.9081 10.6514L30.1774 9.65428L33.0629 4Z" fill="#F7B605"/>
+<path id="Star 4" d="M56.4999 4L59.3855 9.65428L65.6547 10.6514L61.1689 15.143L62.1579 21.4135L56.4999 18.5351L50.842 21.4135L51.831 15.143L47.3451 10.6514L53.6144 9.65428L56.4999 4Z" fill="#F7B605"/>
+<path id="Star 5" d="M79.937 4L82.8225 9.65428L89.0918 10.6514L84.6059 15.143L85.5949 21.4135L79.937 18.5351L74.279 21.4135L75.268 15.143L70.7822 10.6514L77.0514 9.65428L79.937 4Z" fill="#F7B605"/>
+<g id="Mask group">
+<mask id="mask0_0_7" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="94" y="0" width="12" height="25">
+<rect id="Half star" x="94" width="12" height="25" fill="#D9D9D9"/>
+</mask>
+<g mask="url(#mask0_0_7)">
+<path id="Star 6" d="M103.374 4L106.26 9.65428L112.529 10.6514L108.043 15.143L109.032 21.4135L103.374 18.5351L97.716 21.4135L98.705 15.143L94.2192 10.6514L100.488 9.65428L103.374 4Z" fill="#F7B605"/>
+</g>
+</g>
+<g id="Mask group_2">
+<mask id="mask1_0_7" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="106" y="0" width="8" height="25">
+<rect id="Half star_2" width="8" height="25" transform="matrix(-1 0 0 1 114 0)" fill="#D9D9D9"/>
+</mask>
+<g mask="url(#mask1_0_7)">
+<path id="Star 6_2" d="M103.374 4L106.26 9.65428L112.529 10.6514L108.043 15.143L109.032 21.4135L103.374 18.5351L97.716 21.4135L98.705 15.143L94.2192 10.6514L100.488 9.65428L103.374 4Z" fill="#7A5900"/>
+</g>
+</g>
+</g>
+</svg>

@@ -56,8 +56,12 @@ type ParallaxSceneProps = {
    *   they look exactly like the mockup as they pass the middle of the screen.
    * "start"  — at rest. Right for the hero, which is already on screen when
    *   the page loads and must match the mockup before any scrolling happens.
+   * "end"    — once the travel finishes. Right for a section that comes to a
+   *   stop and is then *read*: the layers converge into the mockup position
+   *   and hold there. Without it a sticky section keeps drifting while it
+   *   looks stationary, and what the reader studies is never the design.
    */
-  anchor?: "centre" | "start";
+  anchor?: "centre" | "start" | "end";
 };
 
 export function ParallaxScene({
@@ -117,11 +121,19 @@ export function ParallaxScene({
             const spanX = dir * (amp.x / 100) * sceneBox.width * xScale;
             const spanY = (amp.y / 100) * window.innerHeight;
 
-            // "centre" splits the travel either side of the design position;
-            // "start" begins there and moves away from it.
-            const half = anchor === "centre";
-            const from = { x: half ? -spanX / 2 : 0, y: half ? -spanY / 2 : 0 };
-            const to = { x: half ? spanX / 2 : spanX, y: half ? spanY / 2 : spanY };
+            // Where the zero — the design position — falls in the travel.
+            const from =
+              anchor === "centre"
+                ? { x: -spanX / 2, y: -spanY / 2 }
+                : anchor === "end"
+                  ? { x: spanX, y: spanY }
+                  : { x: 0, y: 0 };
+            const to =
+              anchor === "centre"
+                ? { x: spanX / 2, y: spanY / 2 }
+                : anchor === "end"
+                  ? { x: 0, y: 0 }
+                  : { x: spanX, y: spanY };
 
             tl.fromTo(layer, from, { ...to, ease: "none" }, 0);
           });
