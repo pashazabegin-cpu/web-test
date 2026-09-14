@@ -85,7 +85,7 @@ export function Hero() {
           {/* 3 */}
           <h1
             data-depth="3"
-            className="text-center text-[clamp(2rem,5.6vw,4.35rem)]"
+            className="text-center text-[clamp(2.75rem,calc(6.489vw+19.67px),4.344rem)]"
           >
             <BlurTextEffect>Rade smarter</BlurTextEffect>
             <br />
@@ -113,7 +113,7 @@ export function Hero() {
             data-depth="4"
             className="flex flex-col items-center gap-7 md:gap-9"
           >
-            <p className="max-w-[42ch] text-center text-[clamp(0.9rem,1.45vw,1.3rem)] leading-relaxed">
+            <p className="max-w-[42ch] text-center text-[clamp(1.25rem,calc(2.036vw+12.37px),1.75rem)] leading-[1.3]">
               <BlurTextEffect>
                 Open positions on stocks, crypto and forex in seconds — with
                 insights that explain the market in plain language.

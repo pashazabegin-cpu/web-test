@@ -234,7 +234,7 @@ export function WhyUs() {
         <ul>
           {FEATURES.map((f) => (
             <li key={f.label} className="pb-14">
-              <h3 className="text-center text-2xl">
+              <h3 className="text-center text-[clamp(1.875rem,calc(1.272vw+25.23px),2.1875rem)] leading-[1.198]">
                 <BlurTextEffect>{f.label}</BlurTextEffect>
               </h3>
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -245,7 +245,7 @@ export function WhyUs() {
                 decoding="async"
                 className="mx-auto w-full max-w-[23rem]"
               />
-              <p className="mx-auto max-w-[22rem] px-5 text-center leading-relaxed">
+              <p className="mx-auto max-w-[22rem] px-5 text-center text-[clamp(1.25rem,calc(2.036vw+12.37px),1.75rem)] leading-[1.3]">
                 <BlurTextEffect>{f.copy}</BlurTextEffect>
               </p>
             </li>

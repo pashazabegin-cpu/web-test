@@ -101,7 +101,7 @@ export function FaqCurtain({ under }: { under: React.ReactNode }) {
           <Accordion
             type="single"
             collapsible
-            className="text-[clamp(0.95rem,1.5vw,1.35rem)]"
+            className="text-[clamp(1.25rem,calc(2.036vw+12.37px),1.75rem)]"
           >
             {QA.map((item) => (
               <AccordionItem key={item.q} value={item.q}>

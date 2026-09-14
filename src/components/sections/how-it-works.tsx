@@ -39,6 +39,21 @@ const STEPS = [
 ] as const;
 
 /**
+ * The same three cards as they are drawn on mobile (Figma frame 3:3).
+ *
+ * Not derived from the desktop numbers: the mockup gives them their own
+ * tilts (-0.89 / +2.79 / -2.83 against desktop's -3.56 / +2.89 / -2.64), one
+ * shared width of 403.4 on a 375 frame — so they bleed off both edges — and
+ * heights that grow with the length of the copy. Positions are the centre of
+ * each card inside a 375x462 block whose origin is the first card's top.
+ */
+const MOBILE_CARDS = [
+  { cx: "47.893%", cy: "15.634%", h: "36.856cqw", rotate: -0.89 },
+  { cx: "50.173%", cy: "46.082%", h: "44.458cqw", rotate: 2.79 },
+  { cx: "50.555%", cy: "76.078%", h: "53.671cqw", rotate: -2.83 },
+] as const;
+
+/**
  * Placement of the three gesture frames.
  *
  * Horizontal position comes from correlating the silhouette width-profile of
@@ -333,38 +348,58 @@ export function HowItWorks() {
         ))}
       </div>
 
-      {/* ---- mobile: the three cards simply stack, as drawn ---- */}
+      {/* ---- mobile: Figma frame 3:3, y 2633..3197 of a 375-wide frame ----
+
+           Two structural differences from desktop, both from the mockup and
+           neither guessable from it: there is NO character here — the three
+           cards carry the block on their own — and the cards are full-bleed,
+           each wider than the screen and overlapping the one above, so the
+           stack reads as a pile rather than a list.
+
+           Every card is the same 403.4x? at the same 17.276 radius; only the
+           height, tilt and colour change. Sized in cqw against the block so
+           the pile scales with the screen instead of breaking up. */}
       <div className="md:hidden">
-        <h2 className="py-10 text-center text-[2.1875rem] leading-[1.198] font-extrabold text-gold optical-ui">
+        <h2 className="px-5 pt-14 pb-10 text-center text-[2.1875rem] leading-[1.198] font-extrabold text-gold optical-ui">
           <BlurTextEffect>How it works</BlurTextEffect>
         </h2>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/img/step3.webp"
-          alt="Hand showing three fingers"
-          loading="lazy"
-          decoding="async"
-          className="mx-auto w-full max-w-[22rem]"
-        />
-        <div className="-mt-8 flex flex-col gap-3 px-4 pb-14">
-          {STEPS.map((s) => (
-            <article
-              key={s.n}
-              className="rounded-2xl px-5 py-5"
-              style={{ background: s.bg, color: "#ffffff", transform: `rotate(${s.rotate}deg)` }}
+
+        <div className="@container relative aspect-[375/462] w-full">
+          {MOBILE_CARDS.map((c, i) => (
+            /* Wrapper owns the tilt, so the card itself keeps a clean box. */
+            <div
+              key={STEPS[i].n}
+              className="absolute"
+              style={{
+                left: c.cx,
+                top: c.cy,
+                width: "107.573cqw",
+                height: c.h,
+                transform: `translate(-50%, -50%) rotate(${c.rotate}deg)`,
+              }}
             >
-              <div className="flex items-baseline gap-4">
-                <h3 className="shrink-0 font-display text-base leading-none font-extrabold optical-ui">
-                  {s.n}
-                </h3>
-                <p className="text-sm leading-relaxed">
-                  <BlurTextEffect>{s.copy}</BlurTextEffect>
-                </p>
-              </div>
-            </article>
+              <article
+                className="grid size-full content-center px-[8.9%]"
+                style={{
+                  background: STEPS[i].bg,
+                  color: "#ffffff",
+                  borderRadius: "4.607cqw",
+                }}
+              >
+                <div className="flex items-center gap-[9%] text-[6.45cqw]">
+                  <h3 className="shrink-0 font-display leading-none font-extrabold optical-ui">
+                    <BlurTextEffect>{STEPS[i].n}</BlurTextEffect>
+                  </h3>
+                  <p className="w-[44.11%] shrink-0 leading-[1.4]">
+                    <BlurTextEffect>{STEPS[i].copy}</BlurTextEffect>
+                  </p>
+                </div>
+              </article>
+            </div>
           ))}
         </div>
       </div>
+
     </section>
   );
 }

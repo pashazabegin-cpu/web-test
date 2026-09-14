@@ -148,7 +148,7 @@ export function SiteFooter() {
             className="pointer-events-none absolute top-[52.738%] left-[-93.6%] h-[131.786%] w-[294.4%] max-w-none object-cover"
           />
 
-          <h2 className="absolute top-[7.024%] left-[16.533%] z-10 w-[66.933%] text-[11.733cqw] leading-none">
+          <h2 className="absolute top-[7.024%] left-[16.533%] z-10 w-[66.933%] text-center text-[min(4.344rem,11.733cqw)] leading-none">
             <BlurTextEffect>The market never stops.</BlurTextEffect>{" "}
             <span className="text-gold">
               <BlurTextEffect delay={0.35}>Neither should you.</BlurTextEffect>
@@ -167,11 +167,17 @@ export function SiteFooter() {
             className="absolute top-[59.762%] left-[33.067%] z-10 h-auto w-[33.6%] -translate-y-1/2"
           />
 
-          <p className="absolute top-[74.643%] left-[10.933%] z-10 w-[78.133%] text-[max(0.8125rem,3.733cqw)] leading-normal text-white/40">
-            <BlurTextEffect>
-              Trading with leverage carries a high level of risk and may not be
-              suitable for all investors. Asset values can go down as well as
-              up.
+          <p className="absolute top-[74.643%] left-[10.933%] z-10 w-[78.133%] text-center text-[min(1.25rem,3.733cqw)] leading-normal text-white/40">
+            {/* Figma sets these breaks by hand rather than letting the line
+                wrap; the shape of the block is part of the layout. */}
+            <BlurTextEffect>Trading with leverage carries</BlurTextEffect>
+            <br />
+            <BlurTextEffect delay={0.3}>
+              a high level of risk and may not be suitable for all investors.
+            </BlurTextEffect>
+            <br />
+            <BlurTextEffect delay={0.75}>
+              Asset values can go down as well as up.
             </BlurTextEffect>
           </p>
         </div>
