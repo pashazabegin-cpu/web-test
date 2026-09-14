@@ -36,11 +36,22 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
     const onScroll = () => ScrollTrigger.update();
     lenis.on("scroll", onScroll);
 
+    // Every pinned section measures the page when its trigger is created,
+    // which is before webfonts swap in and before any lazy image below the
+    // fold has reserved its box. On mobile that was enough to leave the
+    // How-it-works pin with zero scroll distance — the cards never arrived.
+    // One refresh once things have settled costs nothing and fixes all of
+    // them at once.
+    const settle = () => ScrollTrigger.refresh();
+    document.fonts?.ready.then(settle);
+    window.addEventListener("load", settle);
+
     const raf = (time: number) => lenis.raf(time * 1000);
     gsap.ticker.add(raf);
     gsap.ticker.lagSmoothing(0);
 
     return () => {
+      window.removeEventListener("load", settle);
       lenis.off("scroll", onScroll);
       gsap.ticker.remove(raf); // the reference snippet leaked this one
       gsap.ticker.lagSmoothing(500, 33);

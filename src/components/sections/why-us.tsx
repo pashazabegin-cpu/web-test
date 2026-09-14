@@ -12,24 +12,32 @@ import {
 const FEATURES = [
   {
     label: "Speed",
+    nw: 1015,
+    nh: 855,
     copy: "Order execution under 0.1s",
     img: "/img/speed-1.webp",
     alt: "Golden rocket",
   },
   {
     label: "AI insight",
+    nw: 1015,
+    nh: 826,
     copy: "Personalized AI trading signals",
     img: "/img/speed-1-1.webp",
     alt: "Golden robot",
   },
   {
     label: "Transparency",
+    nw: 1015,
+    nh: 826,
     copy: "Spreads from 0.0 pips, no hidden fees",
     img: "/img/speed-1-2.webp",
     alt: "Golden padlock",
   },
   {
     label: "Accessibility",
+    nw: 1119,
+    nh: 862,
     copy: "Start with $10, withdrawals in minutes",
     img: "/img/speed-1-3.webp",
     alt: "Golden coin",
@@ -244,9 +252,11 @@ export function WhyUs() {
               <img
                 src={f.img}
                 alt={f.alt}
+                width={f.nw}
+                height={f.nh}
                 loading="lazy"
                 decoding="async"
-                className="mx-auto w-full max-w-[23rem]"
+                className="mx-auto h-auto w-full max-w-[23rem]"
               />
               <p className="mx-auto max-w-[22rem] px-5 text-center text-[clamp(1.25rem,calc(2.036vw+12.37px),1.75rem)] leading-[1.3]">
                 <BlurTextEffect>{f.copy}</BlurTextEffect>

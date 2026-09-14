@@ -124,6 +124,7 @@ export function HowItWorks() {
 
     gsap.registerPlugin(ScrollTrigger);
     let detachSnap = () => {};
+    let detachSnapMobile = () => {};
 
     const ctx = gsap.context(() => {
       const mm = gsap.matchMedia();
@@ -238,10 +239,75 @@ export function HowItWorks() {
           return () => stopPointer?.();
         },
       );
+
+      // ---- mobile: the same state machine, without the figure ----
+      //
+      // The mockup draws all three cards at rest, but the client asked for
+      // the desktop behaviour here too, so the pile assembles itself as you
+      // scroll. Nothing else from the desktop branch carries over: there is
+      // no character to cut between and no giant word to pan, so this is
+      // only the cards rising into their drawn positions.
+      mm.add(
+        "(max-width: 767px) and (prefers-reduced-motion: no-preference)",
+        () => {
+          const cards = gsap.utils.toArray<HTMLElement>("[data-mcard]", el);
+          if (cards.length < 2) return;
+
+          const tl = gsap.timeline({
+            scrollTrigger: {
+              trigger: el,
+              start: "top top",
+              end: "+=200%",
+              pin: true,
+              scrub: 1,
+              invalidateOnRefresh: true,
+            },
+          });
+
+          for (let i = 1; i < cards.length; i++) {
+            const at = i - 1;
+
+            // Flipped while the card is still a full screen below the fold,
+            // so the flip itself is never seen. It starts hidden in markup to
+            // avoid a flash before this effect runs.
+            tl.set(cards[i], { visibility: "visible" }, at);
+            tl.fromTo(
+              cards[i],
+              { y: () => window.innerHeight },
+              {
+                y: 0,
+                duration: 1,
+                ease: "power2.out",
+                onStart: () => replayBlurText(cards[i]),
+              },
+              at,
+            );
+          }
+
+          if (tl.scrollTrigger) {
+            detachSnapMobile = attachSnap(tl.scrollTrigger, cards.length - 1);
+          }
+        },
+      );
+
+      // Neither branch runs when the reader has asked for less motion, and
+      // the cards after the first are hidden in markup — so without this they
+      // would simply never appear. Reveal them as the flat pile the mobile
+      // mockup draws anyway.
+      mm.add("(prefers-reduced-motion: reduce)", () => {
+        gsap.set(gsap.utils.toArray<HTMLElement>("[data-card], [data-mcard]", el), {
+          visibility: "visible",
+          autoAlpha: 1,
+        });
+        gsap.set(gsap.utils.toArray<HTMLElement>("img[data-char]", el), {
+          autoAlpha: 1,
+        });
+      });
     }, root);
 
     return () => {
       detachSnap();
+      detachSnapMobile();
       ctx.revert();
     };
   }, []);
@@ -373,14 +439,16 @@ export function HowItWorks() {
            Every card is the same 403.4x? at the same 17.276 radius; only the
            height, tilt and colour change. Sized in cqw against the block so
            the pile scales with the screen instead of breaking up. */}
-      <div className="md:hidden">
-        <h2 className="px-5 pt-14 pb-10 text-center text-[2.1875rem] leading-[1.198] font-extrabold text-gold optical-ui">
+      <div className="flex h-svh flex-col justify-center md:hidden">
+        <h2 className="px-5 pb-10 text-center text-[2.1875rem] leading-[1.198] font-extrabold text-gold optical-ui">
           <BlurTextEffect>How it works</BlurTextEffect>
         </h2>
 
         <div className="@container relative aspect-[375/462] w-full">
           {MOBILE_CARDS.map((c, i) => (
             /* Wrapper owns the tilt, so the card itself keeps a clean box. */
+            /* Wrapper owns position and tilt; the card inside is what the
+               timeline slides, since GSAP overwrites `transform` outright. */
             <div
               key={STEPS[i].n}
               className="absolute"
@@ -393,11 +461,13 @@ export function HowItWorks() {
               }}
             >
               <article
+                data-mcard
                 className="grid size-full content-center px-[8.9%]"
                 style={{
                   background: STEPS[i].bg,
                   color: "#ffffff",
                   borderRadius: "4.607cqw",
+                  ...(i === 0 ? {} : { visibility: "hidden" as const }),
                 }}
               >
                 <div className="flex items-center gap-[9%] text-[6.45cqw]">
