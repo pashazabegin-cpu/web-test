@@ -87,11 +87,16 @@ const MOBILE_CARDS = [
 const CHARACTERS = [
   {
     src: "/img/step1.webp",
-    // tablet: Figma 1:345 is 427 wide at x 126.79 on a 768 frame, and it is
-    // hung from the title rather than the floor — the cards overlap its lower
-    // third. desktop: bottom-anchored, see the note above.
+    // tablet: hung from the title rather than the floor — the cards overlap
+    // its lower third — and centred on the FIGURE, at the client's request.
+    // The canvases differ, so centring the boxes would make him jump sideways
+    // between frames. k = (figure centre as a share of canvas width) x
+    // (canvas aspect), with the figure centre taken as the mean of head and
+    // torso: that point lands within 3px across all three frames on desktop
+    // (543 / 541 / 544), which is what makes it a trustworthy anchor.
+    // desktop: bottom-anchored, see the note above.
     vars:
-      "[--char-l:16.51%] [--char-t:9.6%] [--char-b:auto] [--char-h:min(62svh,67.63vw)] lg:[--char-l:13.12%] lg:[--char-t:auto] lg:[--char-b:0] lg:[--char-h:min(89.35%,57.02vw)]",
+      "[--char-l:calc(50%_-_var(--char-h)*0.4319)] [--char-t:9.6%] [--char-b:auto] [--char-h:min(62svh,67.63vw)] lg:[--char-l:13.12%] lg:[--char-t:auto] lg:[--char-b:0] lg:[--char-h:min(89.35%,57.02vw)]",
     nw: 675,
     nh: 821,
     alt: "Hand showing one finger",
@@ -99,7 +104,7 @@ const CHARACTERS = [
   {
     src: "/img/step2.webp",
     vars:
-      "[--char-l:17.9%] [--char-t:9.6%] [--char-b:auto] [--char-h:min(62svh,67.63vw)] lg:[--char-l:14.25%] lg:[--char-t:auto] lg:[--char-b:0] lg:[--char-h:min(89.34%,57.02vw)]",
+      "[--char-l:calc(50%_-_var(--char-h)*0.4086)] [--char-t:9.6%] [--char-b:auto] [--char-h:min(62svh,67.63vw)] lg:[--char-l:14.25%] lg:[--char-t:auto] lg:[--char-b:0] lg:[--char-h:min(89.34%,57.02vw)]",
     nw: 632,
     nh: 821,
     alt: "Hand showing two fingers",
@@ -108,7 +113,7 @@ const CHARACTERS = [
     // the party hat needs headroom, so Figma 1:406 draws him larger again
     src: "/img/step3.webp",
     vars:
-      "[--char-l:17.8%] [--char-t:5%] [--char-b:auto] [--char-h:min(70svh,81.63vw)] lg:[--char-l:13.80%] lg:[--char-t:auto] lg:[--char-b:0] lg:[--char-h:min(100%,64.45vw)]",
+      "[--char-l:calc(50%_-_var(--char-h)*0.3760)] [--char-t:5%] [--char-b:auto] [--char-h:min(70svh,81.63vw)] lg:[--char-l:13.80%] lg:[--char-t:auto] lg:[--char-b:0] lg:[--char-h:min(100%,64.45vw)]",
     nw: 753,
     nh: 919,
     alt: "Hand showing three fingers",
@@ -349,7 +354,13 @@ export function HowItWorks() {
             width={c.nw}
             height={c.nh}
             className={cn(
-              "absolute z-10 w-auto max-w-none",
+              // Tablet only: the figure is hung from the title, so it ends
+              // mid-screen where the section-wide ramp below is barely dark
+              // yet, and read as a hard cut. Figma's tablet "Background
+              // shape" (1:349) clears at 67.6% of the figure and is solid by
+              // 95.4%; a mask on the figure reproduces that per frame, which a
+              // single layer cannot — step3 is taller and ends lower.
+              "absolute z-10 w-auto max-w-none [mask-image:linear-gradient(to_bottom,#000_67.6%,transparent_95.4%)] [-webkit-mask-image:linear-gradient(to_bottom,#000_67.6%,transparent_95.4%)] lg:[mask-image:none] lg:[-webkit-mask-image:none]",
               c.vars,
             )}
             style={{
