@@ -20,6 +20,15 @@
  * Nothing is lost at the sides — the page is black and the coins run past the
  * stage on purpose.
  *
+ * Mobile (<md) follows the same rule on Figma frame 3:3: the 375x884 region
+ * y 3247..4131, ending where the mockup's coin box hard-cuts, fitted by
+ * height so the whole block — coins included — is on screen at once. That
+ * matters here more than anywhere: Trust sits sticky under the FAQ curtain,
+ * so anything below the first viewport of this section is never seen. The
+ * rating and regulation lines break after 18 characters in the mockup, hence
+ * the 18.5ch measure (18ch exactly would let sub-pixel rounding push "CySEC"
+ * down a line).
+ *
  * No parallax on this block. It cannot be reconciled with matching the mockup
  * one-to-one here: the section is held on screen by the FAQ curtain, so a
  * scroll-driven offset keeps accumulating while the block looks stationary and
@@ -67,14 +76,14 @@ const CAST = [
 export function Trust() {
   return (
     <section
-      className="relative overflow-hidden bg-ink py-24 md:h-svh md:py-0"
+      className="relative h-svh overflow-hidden bg-ink"
       aria-labelledby="trust-title"
     >
       {/* max() holds the stage at least as wide and at least as tall as the
           section, so it covers without ever distorting.
           @container makes the cqw units below resolve against the stage rather
           than the window, so type scales with the artwork. */}
-      <div className="@container relative md:absolute md:top-1/2 md:left-1/2 md:aspect-[768/1000] md:w-[min(100%,calc(100svh*768/1000))] md:-translate-x-1/2 md:-translate-y-1/2 lg:aspect-[1440/919] lg:w-[max(100%,calc(100svh*1440/919))]">
+      <div className="@container absolute top-1/2 left-1/2 aspect-[375/884] w-[min(100%,calc(100svh*375/884))] -translate-x-1/2 -translate-y-1/2 md:aspect-[768/1000] md:w-[min(100%,calc(100svh*768/1000))] lg:aspect-[1440/919] lg:w-[max(100%,calc(100svh*1440/919))]">
         {/* Coins. The re-export is the previous 1320x566 fill with a 100px
             margin painted round every side — verified 1:1 against the old
             render — so it is placed at its own natural size (1520x766 frame px
@@ -90,7 +99,7 @@ export function Trust() {
           height={766}
           loading="lazy"
           decoding="async"
-          className="pointer-events-none absolute top-[49.4%] left-[-47.188%] z-0 hidden h-auto w-[197.917%] max-w-none md:block lg:top-[46.681%] lg:left-[-2.778%] lg:w-[105.556%]"
+          className="pointer-events-none absolute top-[60.83%] left-[-107.01%] z-0 h-auto w-[313.2%] max-w-none md:top-[49.4%] md:left-[-47.188%] md:w-[197.917%] lg:top-[46.681%] lg:left-[-2.778%] lg:w-[105.556%]"
         />
 
         {CAST.map((p) => (
@@ -117,45 +126,45 @@ export function Trust() {
         {/* Type is sized as a share of the stage width too (22px / 1440 =
             1.528%, 75px = 5.208%, 25px = 1.736%) so it scales with the
             composition instead of drifting against it. */}
-        <div className="relative z-20 flex flex-col items-center gap-6 px-5 text-center md:block md:h-full md:px-0">
+        <div className="relative z-20 h-full text-center">
           <h2
             id="trust-title"
-            className="text-[2.1875rem] leading-[1.198] font-extrabold text-gold optical-ui md:absolute md:inset-x-0 md:top-[10%] md:text-[5.859cqw] lg:top-[13.275%] lg:text-[3.125cqw]"
+            className="absolute inset-x-0 top-[4.525%] mx-auto max-w-[72.267%] text-[9.333cqw] leading-[1.198] font-extrabold text-gold optical-ui md:top-[10%] md:max-w-none md:text-[5.859cqw] lg:top-[13.275%] lg:text-[3.125cqw]"
           >
             <BlurTextEffect>Why traders choose us</BlurTextEffect>
           </h2>
 
-          <p className="font-display text-5xl leading-[1.198] font-extrabold optical-display md:absolute md:inset-x-0 md:top-[21.1%] md:text-[9.766cqw] lg:top-[25.353%] lg:text-[5.208cqw]">
+          <p className="absolute inset-x-0 top-[20.814%] font-display text-[20cqw] leading-[1.198] font-extrabold optical-display md:top-[21.1%] md:text-[9.766cqw] lg:top-[25.353%] lg:text-[5.208cqw]">
             <BlurTextEffect>500,000+</BlurTextEffect>
           </p>
 
-          <p className="text-base md:absolute md:inset-x-0 md:top-[29.6%] md:text-[2.865cqw] lg:top-[34.603%] lg:text-[1.528cqw]">
+          <p className="absolute inset-x-0 top-[30.43%] text-[5.333cqw] leading-[1.3] md:top-[29.6%] md:text-[2.865cqw] md:leading-[1.5] lg:top-[34.603%] lg:text-[1.528cqw]">
             <BlurTextEffect delay={0.12}>traders worldwide</BlurTextEffect>
           </p>
 
-          <div className="md:absolute md:top-[38.9%] md:left-[42.708%] md:h-[2.5%] md:w-[14.844%] lg:top-[44.723%] lg:left-[46.11%] lg:h-[2.72%] lg:w-[7.917%]">
+          <div className="absolute top-[41.29%] left-[34.667%] h-[2.828%] w-[30.4%] md:top-[38.9%] md:left-[42.708%] md:h-[2.5%] md:w-[14.844%] lg:top-[44.723%] lg:left-[46.11%] lg:h-[2.72%] lg:w-[7.917%]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/img/stars.svg"
               alt="Rated 4.7 out of 5"
               width={114}
               height={25}
-              className="h-6 w-auto md:size-full"
+              className="size-full"
             />
           </div>
 
-          <p className="text-base md:absolute md:inset-x-0 md:top-[42.8%] md:text-[2.865cqw] lg:top-[48.966%] lg:text-[1.528cqw]">
+          <p className="absolute inset-x-0 top-[45.701%] mx-auto max-w-[18.5ch] text-[5.333cqw] leading-[1.3] md:top-[42.8%] md:max-w-none md:text-[2.865cqw] md:leading-[1.5] lg:top-[48.966%] lg:text-[1.528cqw]">
             <BlurTextEffect>4.7 on App Store &amp; Google Play</BlurTextEffect>
           </p>
 
-          <p className="mx-auto max-w-[18ch] text-base md:absolute md:inset-x-0 md:top-[52.1%] md:text-[2.865cqw] lg:top-[59.086%] lg:text-[1.528cqw]">
+          <p className="absolute inset-x-0 top-[59.502%] mx-auto max-w-[18ch] text-[5.333cqw] leading-[1.3] md:top-[52.1%] md:text-[2.865cqw] md:leading-[1.5] lg:top-[59.086%] lg:text-[1.528cqw]">
             <BlurTextEffect>Segregated client accounts</BlurTextEffect>
           </p>
 
           {/* Reproduces the mockup verbatim. 123/45 is placeholder text there —
               flagged with the client, to be swapped for the real licence number
               before launch. */}
-          <p className="text-base md:absolute md:inset-x-0 md:top-[63.9%] md:text-[2.865cqw] lg:top-[71.926%] lg:text-[1.528cqw]">
+          <p className="absolute inset-x-0 top-[73.303%] mx-auto max-w-[18.5ch] text-[5.333cqw] leading-[1.3] md:top-[63.9%] md:max-w-none md:text-[2.865cqw] md:leading-[1.5] lg:top-[71.926%] lg:text-[1.528cqw]">
             <BlurTextEffect>Regulated by CySEC · License 123/45</BlurTextEffect>
           </p>
         </div>
