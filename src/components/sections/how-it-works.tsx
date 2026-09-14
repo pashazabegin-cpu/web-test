@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { attachSnap } from "@/lib/lenis";
+import { cn } from "@/lib/utils";
 import {
   BlurTextEffect,
   replayBlurText,
@@ -19,21 +20,27 @@ const STEPS = [
     n: "Step №1",
     copy: "Sign up in 2 minutes",
     bg: "var(--color-step-1)",
-    box: { left: "51.6%", top: "33.7%", width: "32.43%", height: "17.4svh" },
+    /* tablet (Figma 1:351, 768 frame) then desktop (1:52, 1440 frame).
+       On tablet the pile sits UNDER the figure and is much wider; on
+       desktop it sits beside him. */
+    vars:
+      "[--card-l:16.67%] [--card-t:50.5%] [--card-w:61.98%] [--card-h:15svh] lg:[--card-l:51.6%] lg:[--card-t:33.7%] lg:[--card-w:32.43%] lg:[--card-h:17.4svh]",
     rotate: -3.56,
   },
   {
     n: "Step №2",
     copy: "Fund your account",
     bg: "var(--color-step-2)",
-    box: { left: "52.9%", top: "41.9%", width: "32.43%", height: "20.9svh" },
+    vars:
+      "[--card-l:19.45%] [--card-t:56%] [--card-w:61.96%] [--card-h:17svh] lg:[--card-l:52.9%] lg:[--card-t:41.9%] lg:[--card-w:32.43%] lg:[--card-h:20.9svh]",
     rotate: 2.89,
   },
   {
     n: "Step №3",
     copy: "Trade with real-time AI guidance",
     bg: "var(--color-step-3)",
-    box: { left: "52.4%", top: "54%", width: "32.43%", height: "25.6svh" },
+    vars:
+      "[--card-l:18.31%] [--card-t:64.3%] [--card-w:62.23%] [--card-h:20svh] lg:[--card-l:52.4%] lg:[--card-t:54%] lg:[--card-w:32.43%] lg:[--card-h:25.6svh]",
     rotate: -2.64,
   },
 ] as const;
@@ -80,26 +87,28 @@ const MOBILE_CARDS = [
 const CHARACTERS = [
   {
     src: "/img/step1.webp",
-    left: "13.12%",
-    height: "min(89.35%, 57.02vw)",
+    // tablet: Figma 1:345 is 427 wide at x 126.79 on a 768 frame, and it is
+    // hung from the title rather than the floor — the cards overlap its lower
+    // third. desktop: bottom-anchored, see the note above.
+    vars:
+      "[--char-l:16.51%] [--char-t:9.6%] [--char-b:auto] [--char-h:min(62svh,67.63vw)] lg:[--char-l:13.12%] lg:[--char-t:auto] lg:[--char-b:0] lg:[--char-h:min(89.35%,57.02vw)]",
     nw: 675,
     nh: 821,
     alt: "Hand showing one finger",
   },
   {
     src: "/img/step2.webp",
-    left: "14.25%",
-    height: "min(89.34%, 57.02vw)",
+    vars:
+      "[--char-l:17.9%] [--char-t:9.6%] [--char-b:auto] [--char-h:min(62svh,67.63vw)] lg:[--char-l:14.25%] lg:[--char-t:auto] lg:[--char-b:0] lg:[--char-h:min(89.34%,57.02vw)]",
     nw: 632,
     nh: 821,
     alt: "Hand showing two fingers",
   },
   {
-    // 100%, not 100.99%: Figma puts step3's box at y=0, and the export is
-    // clipped to the frame, so a full-height figure is exactly the design.
+    // the party hat needs headroom, so Figma 1:406 draws him larger again
     src: "/img/step3.webp",
-    left: "13.80%",
-    height: "min(100%, 64.45vw)",
+    vars:
+      "[--char-l:17.8%] [--char-t:5%] [--char-b:auto] [--char-h:min(70svh,81.63vw)] lg:[--char-l:13.80%] lg:[--char-t:auto] lg:[--char-b:0] lg:[--char-h:min(100%,64.45vw)]",
     nw: 753,
     nh: 919,
     alt: "Hand showing three fingers",
@@ -249,7 +258,7 @@ export function HowItWorks() {
           <span
             data-giant
             aria-hidden
-            className="font-display text-[27.2vw] leading-none font-extrabold whitespace-nowrap text-[#121212]"
+            className="font-display text-[34.2vw] leading-none font-extrabold whitespace-nowrap text-[#121212] lg:text-[27.2vw]"
           >
             How it works
           </span>
@@ -273,10 +282,15 @@ export function HowItWorks() {
             decoding="async"
             width={c.nw}
             height={c.nh}
-            className="absolute bottom-0 z-10 w-auto max-w-none"
+            className={cn(
+              "absolute z-10 w-auto max-w-none",
+              c.vars,
+            )}
             style={{
-              left: c.left,
-              height: c.height,
+              left: "var(--char-l)",
+              top: "var(--char-t)",
+              bottom: "var(--char-b)",
+              height: "var(--char-h)",
               ...(i === 0 ? {} : { opacity: 0, visibility: "hidden" }),
             }}
           />
@@ -317,11 +331,11 @@ export function HowItWorks() {
         {STEPS.map((s, i) => (
           <div
             key={s.n}
-            className="absolute z-30"
+            className={cn("absolute z-30", s.vars)}
             style={{
-              left: s.box.left,
-              top: s.box.top,
-              width: s.box.width,
+              left: "var(--card-l)",
+              top: "var(--card-t)",
+              width: "var(--card-w)",
               transform: `rotate(${s.rotate}deg)`,
             }}
           >
@@ -329,17 +343,17 @@ export function HowItWorks() {
               data-card
               className="grid content-center rounded-[20px] px-[7%]"
               style={{
-                minHeight: s.box.height,
+                minHeight: "var(--card-h)",
                 background: s.bg,
                 color: "#ffffff",
                 ...(i === 0 ? {} : { visibility: "hidden" }),
               }}
             >
               <div className="flex items-baseline gap-[9%]">
-                <h3 className="shrink-0 font-display text-[clamp(1.05rem,2.1vw,1.9rem)] leading-none font-extrabold optical-ui">
+                <h3 className="shrink-0 font-display text-[clamp(1.75rem,2.1vw,2.2rem)] leading-none font-extrabold optical-ui">
                   <BlurTextEffect>{s.n}</BlurTextEffect>
                 </h3>
-                <p className="text-[clamp(0.85rem,1.9vw,1.7rem)] leading-snug">
+                <p className="text-[clamp(1.75rem,1.9vw,2.2rem)] leading-[1.4]">
                   <BlurTextEffect>{s.copy}</BlurTextEffect>
                 </p>
               </div>

@@ -29,13 +29,13 @@ import { BlurTextEffect } from "@/components/ui/blur-text-effect";
 export function SiteFooter() {
   return (
     <footer className="relative overflow-hidden bg-ink">
-      <ParallaxScene className="@container md:aspect-[1440/919]">
-        {/* ---- desktop / tablet: the Figma frame, to the pixel ---- */}
-
+      <ParallaxScene>
+        {/* ---- desktop: the 1440x919 frame, to the pixel ---- */}
+        <div className="@container relative hidden aspect-[1440/919] lg:block">
         {/* glow — Figma "bg 1", 1177x1180 at (365,-15) */}
         <div
           data-depth="2"
-          className="pointer-events-none absolute top-[-1.632%] left-[25.347%] z-0 hidden h-[128.400%] w-[81.736%] md:block"
+          className="pointer-events-none absolute top-[-1.632%] left-[25.347%] z-0 hidden h-[128.400%] w-[81.736%] lg:block"
           aria-hidden
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -53,7 +53,7 @@ export function SiteFooter() {
         {/* the chihuahua — Figma "dog 1", 664x1030 at (616,50) */}
         <div
           data-depth="2"
-          className="pointer-events-none absolute top-[5.441%] left-[42.778%] z-10 hidden h-[112.078%] w-[46.111%] md:block"
+          className="pointer-events-none absolute top-[5.441%] left-[42.778%] z-10 hidden h-[112.078%] w-[46.111%] lg:block"
           aria-hidden
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -74,7 +74,7 @@ export function SiteFooter() {
             so it is left off rather than paying for an extra stacking context.
             Never a parallax layer: it is welded to the frame. */}
         <div
-          className="pointer-events-none absolute top-[39.391%] left-[-10.694%] z-20 hidden h-[111.643%] w-[122.847%] md:block"
+          className="pointer-events-none absolute top-[39.391%] left-[-10.694%] z-20 hidden h-[111.643%] w-[122.847%] lg:block"
           style={{
             background:
               "linear-gradient(to bottom, rgba(0,0,0,0) 27.651%, rgba(0,0,0,0.7) 48.014%, rgba(0,0,0,0.98) 76.566%)",
@@ -86,7 +86,7 @@ export function SiteFooter() {
             delays chain the runs into a single sweep down the block. */}
         <h2
           data-depth="3"
-          className="absolute top-[15.996%] left-[9.375%] z-30 hidden w-[43.611%] text-[4.827cqw] leading-none md:block"
+          className="absolute top-[15.996%] left-[9.375%] z-30 hidden w-[43.611%] text-[4.827cqw] leading-none lg:block"
         >
           <BlurTextEffect>The market</BlurTextEffect>
           <br />
@@ -102,7 +102,7 @@ export function SiteFooter() {
         {/* CTA — the 441x125 halo's top-left corner is (114,565) */}
         <div
           data-depth="4"
-          className="absolute top-[61.480%] left-[7.917%] z-30 hidden md:block"
+          className="absolute top-[61.480%] left-[7.917%] z-30 hidden lg:block"
         >
           <ShinyButton href="#signup">Open a free account</ShinyButton>
         </div>
@@ -111,7 +111,7 @@ export function SiteFooter() {
             still and stay readable. Disclaimer: 423 wide at (132,803), 14px
             at 40%. Logo box: 126x64 at (1182,798); the artwork is centred in
             that box rather than filling it, which is how Figma crops it. */}
-        <p className="absolute top-[87.378%] left-[9.167%] z-30 hidden w-[29.375%] text-[max(0.75rem,0.972cqw)] leading-normal text-white/40 md:block">
+        <p className="absolute top-[87.378%] left-[9.167%] z-30 hidden w-[29.375%] text-[max(0.75rem,0.972cqw)] leading-normal text-white/40 lg:block">
           <BlurTextEffect>
             Trading with leverage carries a high level of risk and may not be
             suitable for all investors.
@@ -127,8 +127,98 @@ export function SiteFooter() {
           alt="Tridal"
           width={399}
           height={132}
-          className="absolute top-[90.316%] left-[82.083%] z-30 hidden w-[8.75%] -translate-y-1/2 md:block"
+          className="absolute top-[90.316%] left-[82.083%] z-30 hidden w-[8.75%] -translate-y-1/2 lg:block"
         />
+
+        </div>
+
+        {/* ---- tablet: Figma frame 1:280, y 4217..5926 of a 768 frame ----
+
+             Not the desktop composition at a smaller size: the tablet stacks
+             it. The headline and CTA sit ABOVE the dog rather than beside
+             him, the block runs 1709 tall against 919, and the small print
+             and logo land under the artwork. Squeezing the 1440x919 frame
+             into 768 gave a 490px-tall band with the button on the dog's
+             face. */}
+        <div className="@container relative hidden aspect-[768/1709] md:block lg:hidden">
+          <div
+            data-depth="2"
+            className="pointer-events-none absolute top-[24.17%] left-[-26.43%] z-0 h-[68.87%] w-[152.86%]"
+            aria-hidden
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/img/bg-1-full.webp"
+              alt=""
+              width={1024}
+              height={1027}
+              loading="lazy"
+              decoding="async"
+              className="size-full object-cover"
+            />
+          </div>
+
+          <div
+            data-depth="2"
+            className="pointer-events-none absolute top-[29.55%] left-[7.16%] z-10 h-[59.80%] w-[85.68%]"
+            aria-hidden
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/img/dog-1-full.webp"
+              alt=""
+              width={1500}
+              height={2329}
+              loading="lazy"
+              decoding="async"
+              className="size-full object-cover"
+            />
+          </div>
+
+          <div
+            className="pointer-events-none absolute top-[50.67%] left-[-36.07%] z-20 h-[40.49%] w-[262.37%]"
+            style={{
+              background:
+                "linear-gradient(to bottom, rgba(0,0,0,0) 27.651%, rgba(0,0,0,0.7) 48.014%, rgba(0,0,0,0.98) 76.566%)",
+            }}
+            aria-hidden
+          />
+
+          <h2 className="absolute top-0 left-[9.115%] z-30 w-[81.77%] text-[9.049cqw] leading-none">
+            <BlurTextEffect>The market</BlurTextEffect>
+            <br />
+            <BlurTextEffect delay={0.15}>never stops.</BlurTextEffect>
+            <br />
+            <span className="text-gold">
+              <BlurTextEffect delay={0.33}>Neither</BlurTextEffect>
+              <br />
+              <BlurTextEffect delay={0.44}>should you.</BlurTextEffect>
+            </span>
+          </h2>
+
+          <div className="absolute top-[18.96%] left-[21.22%] z-30">
+            <ShinyButton href="#signup">Open a free account</ShinyButton>
+          </div>
+
+          <p className="absolute top-[77.88%] left-[22.4%] z-30 w-[55.08%] text-[1.823cqw] leading-normal text-white/40">
+            <BlurTextEffect>
+              Trading with leverage carries a high level of risk and may not be
+              suitable for all investors.
+            </BlurTextEffect>{" "}
+            <br />
+            <BlurTextEffect delay={0.45}>
+              Asset values can go down as well as up.
+            </BlurTextEffect>
+          </p>
+
+          <Image
+            src="/img/logo.webp"
+            alt="Tridal"
+            width={399}
+            height={132}
+            className="absolute top-[91.16%] left-[41.8%] z-30 h-auto w-[16.41%]"
+          />
+        </div>
 
         {/* ---- mobile: Figma frame 3:3, the footer region y 4650..5490 of a
              375-wide frame, so the same treatment as desktop. Note the design

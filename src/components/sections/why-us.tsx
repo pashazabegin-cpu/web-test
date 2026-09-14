@@ -72,7 +72,10 @@ export function WhyUs() {
           const copies = gsap.utils.toArray<HTMLElement>("[data-copy]", el);
           if (!list) return;
 
-          const step = () => window.innerHeight * STEP;
+          // Measured, not assumed: the row height is a breakpoint-dependent
+          // utility now (5.6vh on tablet, 13vh on desktop), and duplicating
+          // that number here is how the two silently drift apart.
+          const step = () => labels[0]?.offsetHeight || window.innerHeight * STEP;
 
           const tl = gsap.timeline({
             scrollTrigger: {
@@ -202,7 +205,7 @@ export function WhyUs() {
               <li
                 key={f.label}
                 data-label
-                className="flex h-[13vh] items-center font-display text-[clamp(1.75rem,3.82vw,3.44rem)] leading-[1.198] font-extrabold"
+                className="flex h-[5.6vh] items-center font-display text-[clamp(2.1875rem,calc(2.976vw+12.14px),3.44rem)] leading-[1.198] font-extrabold lg:h-[13vh]"
                 style={{ opacity: dim(i) }}
               >
                 <BlurTextEffect>{f.label}</BlurTextEffect>
@@ -212,12 +215,12 @@ export function WhyUs() {
         </div>
 
         {/* supporting copy */}
-        <div className="absolute right-[6%] top-[40.9%] z-10 flex h-[13vh] w-[24%] items-center">
+        <div className="absolute right-[6%] top-[40.9%] z-10 flex h-[5.6vh] w-[24%] items-center lg:h-[13vh]">
           {FEATURES.map((f, i) => (
             <p
               key={f.label}
               data-copy
-              className="absolute text-[clamp(0.9rem,1.95vw,1.75rem)] leading-[1.4]"
+              className="absolute text-[clamp(1.25rem,calc(1.19vw+10.86px),1.75rem)] leading-[1.4]"
               style={i === 0 ? undefined : { opacity: 0, visibility: "hidden" }}
             >
               <BlurTextEffect>{f.copy}</BlurTextEffect>
